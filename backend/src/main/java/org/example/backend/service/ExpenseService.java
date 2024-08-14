@@ -2,6 +2,7 @@ package org.example.backend.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.backend.DB.ExpenseRepo;
+import org.example.backend.exception.ExpenseNotFoundException;
 import org.example.backend.model.Expense;
 import org.example.backend.model.ExpenseDto;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ExpenseService {
     private final ExpenseRepo expenseRepo;
+
+    public List<Expense> findAllExpenses() {
+        return expenseRepo.findAll();
+    }
+
 
     public Expense addExpense(ExpenseDto userEntries) {
         Expense newExpense = new Expense(
@@ -26,7 +32,12 @@ public class ExpenseService {
         return expenseRepo.save(newExpense);
     }
 
-    public List<Expense> findAllExpenses() {
-        return expenseRepo.findAll();
+
+    public String deleteExpense(String id) throws ExpenseNotFoundException {
+        if(!expenseRepo.existsById(id)){
+            throw new ExpenseNotFoundException(id);
+        }
+        expenseRepo.deleteById(id);
+        return id;
     }
 }

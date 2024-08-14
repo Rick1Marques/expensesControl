@@ -25,4 +25,9 @@ public class ExpensesController {
         return expenseService.addExpense(userEntries);
     }
 
+    @DeleteMapping("{id}")
+    public String deleteExpense(@PathVariable String id){
+        return expenseService.deleteExpense(id);
+    }
+
 }
