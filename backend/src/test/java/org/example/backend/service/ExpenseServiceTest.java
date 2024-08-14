@@ -1,6 +1,7 @@
 package org.example.backend.service;
 
 import org.example.backend.DB.ExpenseRepo;
+import org.example.backend.exception.ExpenseNotFoundException;
 import org.example.backend.model.Expense;
 import org.example.backend.model.ExpenseDto;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,7 @@ class ExpenseServiceTest {
     @Test
     void findAllExpenses() {
         Expense expenseEx1 = new Expense(
-                null,
+                "1",
                 "food",
                 "edeka",
                 30.70,
@@ -28,7 +29,7 @@ class ExpenseServiceTest {
                 LocalDate.of(2024,5,20)
         );
         Expense expenseEx2 = new Expense(
-                null,
+                "2",
                 "food",
                 "edeka",
                 30.70,
@@ -82,4 +83,51 @@ class ExpenseServiceTest {
 
     }
 
+
+    @Test
+    void deleteExpense() {
+
+        Expense expenseEx1 = new Expense(
+                "1",
+                "food",
+                "edeka",
+                30.70,
+                false,
+                "",
+                LocalDate.of(2024,5,20)
+        );
+
+        when(expenseRepoMock.existsById(expenseEx1.id())).thenReturn(true);
+        doNothing().when(expenseRepoMock).deleteById(expenseEx1.id());
+
+        String result = expenseService.deleteExpense("1");
+
+        verify(expenseRepoMock).existsById(expenseEx1.id());
+        verify(expenseRepoMock).deleteById(expenseEx1.id());
+
+        assertEquals(expenseEx1.id(), result);
+
+    }
+
+    @Test
+    void throwException_deleteExpense() {
+
+        Expense expenseEx1 = new Expense(
+                "99",
+                "food",
+                "edeka",
+                30.70,
+                false,
+                "",
+                LocalDate.of(2024,5,20)
+        );
+
+        when(expenseRepoMock.existsById(expenseEx1.id())).thenReturn(false);
+
+        assertThrows(ExpenseNotFoundException.class, () -> expenseService.deleteExpense(expenseEx1.id()));
+
+        verify(expenseRepoMock).existsById(expenseEx1.id());
+        verify(expenseRepoMock, never()).deleteById(expenseEx1.id());
+
+    }
 }
