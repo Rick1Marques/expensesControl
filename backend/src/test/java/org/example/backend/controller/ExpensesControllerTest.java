@@ -21,6 +21,15 @@ class ExpensesControllerTest {
 
     @Test
     @DirtiesContext
+    void getExpenses() throws Exception {
+        mvc.perform(MockMvcRequestBuilders
+                .get("/api/expenses"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json("[]"));
+    }
+
+    @Test
+    @DirtiesContext
     void postExpense() throws Exception{
         mvc.perform(MockMvcRequestBuilders
                 .post("/api/expenses")
