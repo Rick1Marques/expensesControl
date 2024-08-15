@@ -1,4 +1,4 @@
-name: expensesControl-frontend
+name: expensesControl-sonar-backend
 on:
   push:
     branches:
