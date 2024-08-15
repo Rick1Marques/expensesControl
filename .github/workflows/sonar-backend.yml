@@ -1,4 +1,4 @@
-name: SonarCloud
+name: expensesControl-frontend
 on:
   push:
     branches:
