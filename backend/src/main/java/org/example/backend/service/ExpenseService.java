@@ -8,6 +8,7 @@ import org.example.backend.model.ExpenseDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,10 +35,24 @@ public class ExpenseService {
 
 
     public String deleteExpense(String id) throws ExpenseNotFoundException {
-        if(!expenseRepo.existsById(id)){
+        if(!expenseRepo.existsById(id)) {
             throw new ExpenseNotFoundException(id);
         }
         expenseRepo.deleteById(id);
         return id;
+    }
+
+    public Expense updateExpense(Expense expense, String id) throws ExpenseNotFoundException {
+        Expense oldExpense = expenseRepo.findById(expense.id()).orElseThrow(()-> new ExpenseNotFoundException(expense.id()));
+        Expense updatedExpense = oldExpense
+                .withCategory(expense.category())
+                .withVendor(expense.vendor())
+                .withAmount(expense.amount())
+                .withCashPayment(expense.isCashPayment())
+                .withDescription(expense.description())
+                .withDate(expense.date());
+
+        return expenseRepo.save(updatedExpense);
+
     }
 }
