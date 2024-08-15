@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -128,6 +129,41 @@ class ExpenseServiceTest {
 
         verify(expenseRepoMock).existsById(expenseEx1.id());
         verify(expenseRepoMock, never()).deleteById(expenseEx1.id());
+
+    }
+
+
+    @Test
+    void updateExpense() {
+        Expense oldExpense = new Expense(
+                "1",
+                "food",
+                "rewe",
+                10.50,
+                false,
+                "",
+                LocalDate.of(2024,5,20)
+        );
+
+        Expense newExpense = new Expense(
+                "1",
+                "food",
+                "edeka",
+                23.30,
+                false,
+                "",
+                LocalDate.of(2024,5,20)
+        );
+
+        when(expenseRepoMock.findById("1")).thenReturn(Optional.of(oldExpense));
+        when(expenseRepoMock.save(newExpense)).thenReturn(newExpense);
+
+        Expense result = expenseService.updateExpense(newExpense, "1");
+
+        verify(expenseRepoMock).findById("1");
+        verify(expenseRepoMock).save(newExpense);
+
+        assertEquals(newExpense, result);
 
     }
 }

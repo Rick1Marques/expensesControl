@@ -87,4 +87,49 @@ class ExpensesControllerTest {
                 .delete("/api/expenses/1"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
+
+    @Test
+    void putExpense() throws Exception {
+
+        Expense expense = new Expense(
+                "1",
+                "food",
+                "rewe",
+                30.70,
+                false,
+                "",
+                LocalDate.of(2024,5,20)
+        );
+
+        expenseRepo.save(expense);
+
+
+        mvc.perform(MockMvcRequestBuilders
+                .put("/api/expenses/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {
+                        "id": "1",
+                        "category":"food",
+                        "vendor":"edeka",
+                        "amount":45.40,
+                        "isCashPayment":false,
+                        "description":"",
+                        "date":"2024-05-20"
+                        }
+                        """
+                ))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json("""
+                        {
+                        "id": "1",
+                        "category":"food",
+                        "vendor":"edeka",
+                        "amount":45.40,
+                        "isCashPayment":false,
+                        "description":"",
+                        "date":"2024-05-20"
+                        }
+"""));
+    }
 }
