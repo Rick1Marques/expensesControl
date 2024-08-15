@@ -30,4 +30,9 @@ public class ExpensesController {
         return expenseService.deleteExpense(id);
     }
 
+    @PutMapping("{id}")
+    public Expense putExpense(@RequestBody Expense expense, @PathVariable String id){
+        return expenseService.updateExpense(expense, id);
+    }
+
 }

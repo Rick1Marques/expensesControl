@@ -8,8 +8,6 @@ import org.example.backend.model.ExpenseDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class ExpenseService {
@@ -43,7 +41,7 @@ public class ExpenseService {
     }
 
     public Expense updateExpense(Expense expense, String id) throws ExpenseNotFoundException {
-        Expense oldExpense = expenseRepo.findById(expense.id()).orElseThrow(()-> new ExpenseNotFoundException(expense.id()));
+        Expense oldExpense = expenseRepo.findById(id).orElseThrow(()-> new ExpenseNotFoundException(id));
         Expense updatedExpense = oldExpense
                 .withCategory(expense.category())
                 .withVendor(expense.vendor())

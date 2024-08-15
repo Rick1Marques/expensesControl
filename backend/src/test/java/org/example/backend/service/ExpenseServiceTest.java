@@ -5,7 +5,6 @@ import org.example.backend.exception.ExpenseNotFoundException;
 import org.example.backend.model.Expense;
 import org.example.backend.model.ExpenseDto;
 import org.junit.jupiter.api.Test;
-import org.springframework.data.mongodb.core.aggregation.ArithmeticOperators;
 
 import java.time.LocalDate;
 import java.util.List;
