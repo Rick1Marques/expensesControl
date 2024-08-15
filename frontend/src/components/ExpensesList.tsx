@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import {Expense} from "../model/Expense.ts";
 import axios from "axios";
+import ExpenseCard from "./ExpenseCard.tsx";
 
 
 export default function ExpensesList() {
@@ -26,8 +27,17 @@ export default function ExpensesList() {
     }, [])
 
     return (
-        <>
-            <h1>{expenses[0].vendor}</h1>
-        </>
+        <section>
+            <h2>Expenses List</h2>
+            {expenses.map(expense =>
+                <ExpenseCard
+                    key={expense.id}
+                    vendor={expense.vendor}
+                    amount={expense.amount}
+                    category={expense.category}
+                    date={expense.date}
+                    isCashPayment={expense.isCashPayment}
+                />)}
+        </section>
     )
 }
