@@ -21,14 +21,29 @@ export default function ExpensesList() {
                 console.error("Error during fetch:", error)
             }
         }
-
         fetchData()
 
     }, [])
 
+    function listFilter(type: keyof Expense) {
+        const sortedExpenses = [...expenses].sort((a, b) => {
+            if(type === "amount"){
+                return b.amount - a.amount
+            } else {
+                const dateA = new Date(a.date).getTime()
+                const dateB = new Date(b.date).getTime()
+                return dateB - dateA;
+            }
+        });
+        setExpenses(sortedExpenses);
+    }
+
     return (
         <section>
             <h2>Expenses List</h2>
+            <button onClick={()=>listFilter("date")}>Date</button>
+            <button onClick={()=>listFilter("amount")}>Amount</button>
+            <ul>
             {expenses.map(expense =>
                 <ExpenseCard
                     key={expense.id}
@@ -38,6 +53,7 @@ export default function ExpensesList() {
                     date={expense.date}
                     isCashPayment={expense.isCashPayment}
                 />)}
+            </ul>
         </section>
     )
 }

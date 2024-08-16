@@ -9,12 +9,14 @@ isCashPayment: boolean
 export default function ExpenseCard({vendor, amount, isCashPayment, date} : ExpenseCardProps){
 
     return (
-        <article>
-            <p>{vendor}</p>
-            <p>{amount}</p>
-            {isCashPayment && <p>cash</p>}
-            <p>{date}</p>
-        </article>
+        <li>
+            <article>
+                <p>{vendor}</p>
+                <p>{amount}</p>
+                {isCashPayment && <p>cash</p>}
+                <p>{date}</p>
+            </article>
+        </li>
     )
 
 }
