@@ -31,6 +31,8 @@ export default function ExpensesList() {
 
     }, [])
 
+
+
     useEffect(() => {
         sortExpenses(sortField, sortOrder);
     }, [expenses, sortOrder, sortField])
