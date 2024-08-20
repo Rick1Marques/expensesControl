@@ -1,5 +1,6 @@
 import {ChangeEvent, useContext, useEffect, useState} from "react";
 import {ExpensesContext} from "../store/expenses-context.tsx";
+import GroupCard from "./GroupCard.tsx";
 
 type Order = "asc" | "desc"
 type Field = "amount" | "alpha"
@@ -81,11 +82,7 @@ export default function GroupList({title}: ListProps) {
 
         <ul>
             {expensesGroup.map(group => {
-                return (<li>
-                    <p>{group.name}</p>
-                    <p>{group.totalAmount}</p>
-                    <p>{group.totalEntries}</p>
-                </li>)
+                return (<GroupCard key={group.name} name={group.name} totalAmount={group.totalAmount} totalEntries={group.totalEntries}/>)
             })}
         </ul>
     </section>)
