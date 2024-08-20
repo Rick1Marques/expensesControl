@@ -1,45 +1,27 @@
-import {ChangeEvent, useEffect, useState} from "react";
+import {ChangeEvent, useContext, useEffect, useState} from "react";
 import {Expense} from "../model/Expense.ts";
-import axios from "axios";
 import ExpenseCard from "./ExpenseCard.tsx";
+import {ExpensesContext} from "../store/expenses-context.tsx";
 
 
 type Order = "asc" | "desc"
 type Field = "amount" | "date"
 
 export default function ExpensesList() {
-    const [expenses, setExpenses] = useState<Expense[]>([])
+    const{expensesGlobal} = useContext(ExpensesContext)
+
     const [sortOrder, setSortOrder] = useState<Order>("asc")
     const [sortField, setSortField] = useState<Field>("date")
-
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                const response = await axios.get("api/expenses");
-                if (response.status === 200) {
-                    const data = await response.data;
-                    setExpenses(data)
-                } else {
-                    console.error("Error fetching data:", response.statusText)
-                }
-            } catch (error) {
-                console.error("Error during fetch:", error)
-            }
-        }
-
-        fetchData()
-
-    }, [])
-
-
+    const [expenses, setExpenses] = useState<Expense[]>([])
 
     useEffect(() => {
         sortExpenses(sortField, sortOrder);
-    }, [expenses, sortOrder, sortField])
+    }, [expensesGlobal, sortOrder, sortField])
 
 
     function sortExpenses(field: Field, order: Order) {
-        const sortedExpenses = expenses.sort((a, b) => {
+
+        const sortedExpenses = [...expensesGlobal].sort((a, b) => {
             let comparison = 0;
             if (field === "amount") {
                 comparison = a.amount - b.amount

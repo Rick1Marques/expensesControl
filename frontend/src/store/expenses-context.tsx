@@ -4,7 +4,7 @@ import axios from "axios";
 
 
 type ExpensesContext = {
-    expenses: Expense[]
+    expensesGlobal: Expense[]
 }
 
 type ExpensesContextProviderProps = {
@@ -13,7 +13,7 @@ type ExpensesContextProviderProps = {
 
 
 export const ExpensesContext = createContext<ExpensesContext>({
-    expenses: []
+    expensesGlobal: []
 })
 
 
@@ -40,10 +40,10 @@ export default function ExpensesContextProvider({children}: ExpensesContextProvi
 
     }, [])
 
-
     const ctxValue = {
-        expenses: expenses
+        expensesGlobal: expenses
     }
+
     return (
         <ExpensesContext.Provider value={ctxValue}>
             {children}
@@ -51,3 +51,5 @@ export default function ExpensesContextProvider({children}: ExpensesContextProvi
 
     )
 }
+
+
