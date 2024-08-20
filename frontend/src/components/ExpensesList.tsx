@@ -8,33 +8,32 @@ type Order = "asc" | "desc"
 type Field = "amount" | "date"
 
 export default function ExpensesList() {
-    const{expensesGlobal} = useContext(ExpensesContext)
+    const {expensesGlobal} = useContext(ExpensesContext)
 
     const [sortOrder, setSortOrder] = useState<Order>("asc")
     const [sortField, setSortField] = useState<Field>("date")
     const [expenses, setExpenses] = useState<Expense[]>([])
 
     useEffect(() => {
+        function sortExpenses(field: Field, order: Order) {
+
+            const sortedExpenses = [...expensesGlobal].sort((a, b) => {
+                let comparison = 0;
+                if (field === "amount") {
+                    comparison = a.amount - b.amount
+                } else if (field === "date") {
+                    const dateA = new Date(a.date).getTime()
+                    const dateB = new Date(b.date).getTime()
+                    comparison = dateA - dateB;
+                }
+                return order === "asc" ? comparison : -comparison
+            })
+
+            setExpenses(sortedExpenses)
+        }
+
         sortExpenses(sortField, sortOrder);
     }, [expensesGlobal, sortOrder, sortField])
-
-
-    function sortExpenses(field: Field, order: Order) {
-
-        const sortedExpenses = [...expensesGlobal].sort((a, b) => {
-            let comparison = 0;
-            if (field === "amount") {
-                comparison = a.amount - b.amount
-            } else if (field === "date") {
-                const dateA = new Date(a.date).getTime()
-                const dateB = new Date(b.date).getTime()
-                comparison = dateA - dateB;
-            }
-            return order === "asc" ? comparison : -comparison
-        })
-
-        setExpenses(sortedExpenses)
-    }
 
 
     function handleFieldChange(field: Field) {
