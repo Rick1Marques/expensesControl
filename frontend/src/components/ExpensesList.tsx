@@ -1,56 +1,39 @@
-import {ChangeEvent, useEffect, useState} from "react";
+import {ChangeEvent, useContext, useEffect, useState} from "react";
 import {Expense} from "../model/Expense.ts";
-import axios from "axios";
 import ExpenseCard from "./ExpenseCard.tsx";
+import {ExpensesContext} from "../store/expenses-context.tsx";
 
 
 type Order = "asc" | "desc"
 type Field = "amount" | "date"
 
 export default function ExpensesList() {
-    const [expenses, setExpenses] = useState<Expense[]>([])
+    const {expensesGlobal} = useContext(ExpensesContext)
+
     const [sortOrder, setSortOrder] = useState<Order>("asc")
     const [sortField, setSortField] = useState<Field>("date")
+    const [expenses, setExpenses] = useState<Expense[]>([])
 
     useEffect(() => {
-        async function fetchData() {
-            try {
-                const response = await axios.get("api/expenses");
-                if (response.status === 200) {
-                    const data = await response.data;
-                    setExpenses(data)
-                } else {
-                    console.error("Error fetching data:", response.statusText)
+        function sortExpenses(field: Field, order: Order) {
+
+            const sortedExpenses = [...expensesGlobal].sort((a, b) => {
+                let comparison = 0;
+                if (field === "amount") {
+                    comparison = a.amount - b.amount
+                } else if (field === "date") {
+                    const dateA = new Date(a.date).getTime()
+                    const dateB = new Date(b.date).getTime()
+                    comparison = dateA - dateB;
                 }
-            } catch (error) {
-                console.error("Error during fetch:", error)
-            }
+                return order === "asc" ? comparison : -comparison
+            })
+
+            setExpenses(sortedExpenses)
         }
 
-        fetchData()
-
-    }, [])
-
-    useEffect(() => {
         sortExpenses(sortField, sortOrder);
-    }, [expenses, sortOrder, sortField])
-
-
-    function sortExpenses(field: Field, order: Order) {
-        const sortedExpenses = expenses.sort((a, b) => {
-            let comparison = 0;
-            if (field === "amount") {
-                comparison = a.amount - b.amount
-            } else if (field === "date") {
-                const dateA = new Date(a.date).getTime()
-                const dateB = new Date(b.date).getTime()
-                comparison = dateA - dateB;
-            }
-            return order === "asc" ? comparison : -comparison
-        })
-
-        setExpenses(sortedExpenses)
-    }
+    }, [expensesGlobal, sortOrder, sortField])
 
 
     function handleFieldChange(field: Field) {
