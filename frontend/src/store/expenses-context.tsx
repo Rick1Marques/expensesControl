@@ -21,7 +21,6 @@ export const ExpensesContext = createContext<ExpensesContext>({
     expensesGlobal: [],
     expensesVendor: [],
     expensesCategory: []
-
 })
 
 
@@ -51,10 +50,10 @@ export default function ExpensesContextProvider({children}: ExpensesContextProvi
 
     }, [])
 
-    function groupExpenses(type: GroupType, data : Expense[]){
+    function groupExpenses(groupType: GroupType, data : Expense[]){
         const groupedExpenses = data.reduce((acc, expense) => {
             let key: string;
-            if (type === "vendor") {
+            if (groupType === "vendor") {
                 key = expense.vendor;
             } else {
                 key = expense.category;
@@ -70,7 +69,7 @@ export default function ExpensesContextProvider({children}: ExpensesContextProvi
         }, {} as Record<string, Group>);
 
         const groupValues = Object.values(groupedExpenses);
-        if(type === "vendor"){
+        if(groupType === "vendor"){
         setExpensesVendor(groupValues);
         } else {
             setExpensesCategory(groupValues)
