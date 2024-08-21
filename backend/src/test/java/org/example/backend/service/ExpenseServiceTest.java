@@ -4,6 +4,7 @@ import org.example.backend.DB.ExpenseRepo;
 import org.example.backend.exception.ExpenseNotFoundException;
 import org.example.backend.model.Expense;
 import org.example.backend.model.ExpenseDto;
+import org.example.backend.model.PaymentFrequency;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -27,7 +28,8 @@ class ExpenseServiceTest {
                 30.70,
                 false,
                 "",
-                LocalDate.of(2024,5,20)
+                LocalDate.of(2024,5,20),
+                PaymentFrequency.ONCE
         );
         Expense expenseEx2 = new Expense(
                 "2",
@@ -36,7 +38,8 @@ class ExpenseServiceTest {
                 30.70,
                 false,
                 "",
-                LocalDate.of(2024,5,20)
+                LocalDate.of(2024,5,20),
+                PaymentFrequency.ONCE
         );
 
         List<Expense> listOfExpensesEx = List.of(expenseEx1, expenseEx2);
@@ -61,7 +64,8 @@ class ExpenseServiceTest {
                 30.70,
                 false,
                 "",
-                LocalDate.of(2024,5,20)
+                LocalDate.of(2024,5,20),
+                PaymentFrequency.ONCE
         );
 
         Expense expense = new Expense(
@@ -71,7 +75,8 @@ class ExpenseServiceTest {
                 30.70,
                 false,
                 "",
-                LocalDate.of(2024,5,20)
+                LocalDate.of(2024,5,20),
+                PaymentFrequency.ONCE
         );
 
         when(expenseRepoMock.save(expense)).thenReturn(expense);
@@ -95,7 +100,8 @@ class ExpenseServiceTest {
                 30.70,
                 false,
                 "",
-                LocalDate.of(2024,5,20)
+                LocalDate.of(2024,5,20),
+                PaymentFrequency.ONCE
         );
 
         when(expenseRepoMock.existsById(expenseEx1.id())).thenReturn(true);
@@ -120,7 +126,8 @@ class ExpenseServiceTest {
                 30.70,
                 false,
                 "",
-                LocalDate.of(2024,5,20)
+                LocalDate.of(2024,5,20),
+                PaymentFrequency.ONCE
         );
 
         when(expenseRepoMock.existsById(expenseEx1.id())).thenReturn(false);
@@ -142,7 +149,8 @@ class ExpenseServiceTest {
                 10.50,
                 false,
                 "",
-                LocalDate.of(2024,5,20)
+                LocalDate.of(2024,5,20),
+                PaymentFrequency.ONCE
         );
 
         Expense newExpense = new Expense(
@@ -152,7 +160,8 @@ class ExpenseServiceTest {
                 23.30,
                 false,
                 "",
-                LocalDate.of(2024,5,20)
+                LocalDate.of(2024,5,20),
+                PaymentFrequency.ONCE
         );
 
         when(expenseRepoMock.findById("1")).thenReturn(Optional.of(oldExpense));

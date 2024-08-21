@@ -6,13 +6,13 @@ type Order = "asc" | "desc"
 type Field = "amount" | "alpha"
 
 type ListProps = {
-    title: "vendors" | "categories",
+    title: "vendor" | "category",
 }
 
 type Group = { name: string; totalAmount: number; totalEntries: number }
 
 export default function GroupList({title}: ListProps) {
-    const {expensesGlobal} = useContext(ExpensesContext)
+    const {expensesGlobal, expensesCategory, expensesVendor} = useContext(ExpensesContext)
 
     const [sortOrder, setSortOrder] = useState<Order>("desc")
     const [sortField, setSortField] = useState<Field>("amount")
@@ -23,25 +23,13 @@ export default function GroupList({title}: ListProps) {
 
     function sortExpenses(field: Field, order: Order) {
 
-        // GROUP
-        const groupExpenses = expensesGlobal.reduce((acc, expense) => {
-            let key: string;
-            if (title === "vendors") {
-                key = expense.vendor;
-            } else {
-                key = expense.category;
-            }
-            if (!acc[key]) {
-                acc[key] = {name: key, totalAmount: 0, totalEntries: 0};
-            }
-            acc[key].totalAmount += expense.amount;
-            acc[key].totalEntries += 1;
+       let groupedExpenses: Group[] = []
+        if( title === "vendor"){
+            groupedExpenses = [...expensesVendor];
+        } else {
+            groupedExpenses = [...expensesCategory]
+        }
 
-            return acc;
-
-        }, {} as Record<string, Group>);
-
-        const groupedExpenses = Object.values(groupExpenses);
 
         const sortedExpensesGroup = [...groupedExpenses].sort((a, b) => {
             let comparison = 0;

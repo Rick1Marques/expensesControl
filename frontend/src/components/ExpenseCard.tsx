@@ -1,12 +1,13 @@
 type ExpenseCardProps = {
-vendor: string
-amount:number
-category: string
-date:string
-isCashPayment: boolean
+    vendor: string
+    amount: number
+    category: string
+    date: string
+    isCashPayment: boolean
+    paymentFrequency: "once" | "weekly" | "monthly" | "quarterly" | "biannual" | "yearly"
 }
 
-export default function ExpenseCard({vendor, amount, isCashPayment, date} : ExpenseCardProps){
+export default function ExpenseCard({vendor, amount, isCashPayment, date, paymentFrequency}: ExpenseCardProps) {
 
     return (
         <li>
@@ -15,6 +16,7 @@ export default function ExpenseCard({vendor, amount, isCashPayment, date} : Expe
                 <p>{amount}</p>
                 {isCashPayment && <p>cash</p>}
                 <p>{date}</p>
+                <p>{paymentFrequency}</p>
             </article>
         </li>
     )

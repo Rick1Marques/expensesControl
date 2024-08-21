@@ -6,4 +6,5 @@ export type Expense = {
     isCashPayment: boolean,
     description: string,
     date: string
+    paymentFrequency: "ONCE" | "WEEKLY" | "MONTHLY" | "QUARTERLY" | "BIANNUAL" | "YEARLY"
 }
