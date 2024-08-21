@@ -1,6 +1,6 @@
 package org.example.backend.controller;
 
-import org.example.backend.DB.ExpenseRepo;
+import org.example.backend.repo.ExpenseRepo;
 import org.example.backend.model.Expense;
 import org.example.backend.model.PaymentFrequency;
 import org.junit.jupiter.api.Test;

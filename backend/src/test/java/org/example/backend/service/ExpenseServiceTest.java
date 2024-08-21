@@ -1,6 +1,6 @@
 package org.example.backend.service;
 
-import org.example.backend.DB.ExpenseRepo;
+import org.example.backend.repo.ExpenseRepo;
 import org.example.backend.exception.ExpenseNotFoundException;
 import org.example.backend.model.Expense;
 import org.example.backend.model.ExpenseDto;
