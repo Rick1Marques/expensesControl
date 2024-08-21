@@ -14,6 +14,7 @@ public record Expense(
         double amount,
         boolean isCashPayment,
         String description,
-        LocalDate date
+        LocalDate date,
+        PaymentFrequency paymentFrequency
 ) {
 }

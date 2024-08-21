@@ -64,6 +64,7 @@ export default function ExpensesList() {
                         category={expense.category}
                         date={expense.date}
                         isCashPayment={expense.isCashPayment}
+                        paymentFrequency={expense.paymentFrequency}
                     />)}
             </ul>
         </section>

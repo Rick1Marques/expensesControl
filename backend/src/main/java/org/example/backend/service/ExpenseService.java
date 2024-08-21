@@ -26,7 +26,8 @@ public class ExpenseService {
                 userEntries.amount(),
                 userEntries.isCashPayment(),
                 userEntries.description(),
-                userEntries.date()
+                userEntries.date(),
+                userEntries.paymentFrequency()
         );
         return expenseRepo.save(newExpense);
     }
@@ -48,7 +49,8 @@ public class ExpenseService {
                 .withAmount(expense.amount())
                 .withCashPayment(expense.isCashPayment())
                 .withDescription(expense.description())
-                .withDate(expense.date());
+                .withDate(expense.date())
+                .withPaymentFrequency(expense.paymentFrequency());
 
         return expenseRepo.save(updatedExpense);
 

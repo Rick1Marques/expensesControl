@@ -2,6 +2,7 @@ package org.example.backend.controller;
 
 import org.example.backend.DB.ExpenseRepo;
 import org.example.backend.model.Expense;
+import org.example.backend.model.PaymentFrequency;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -30,27 +31,28 @@ class ExpensesControllerTest {
     @DirtiesContext
     void getExpenses() throws Exception {
         mvc.perform(MockMvcRequestBuilders
-                .get("/api/expenses"))
+                        .get("/api/expenses"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("[]"));
     }
 
     @Test
     @DirtiesContext
-    void postExpense() throws Exception{
+    void postExpense() throws Exception {
         mvc.perform(MockMvcRequestBuilders
-                .post("/api/expenses")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("""
-                                                  {
-                                                         "category":"food",
-                                                         "vendor":"edeka",
-                                                         "amount":30.70,
-                                                         "isCashPayment":false,
-                                                         "description":"",
-                                                         "date":"2024-05-20"
-                                                  }
-                        """))
+                        .post("/api/expenses")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                                          {
+                                                                 "category":"food",
+                                                                 "vendor":"edeka",
+                                                                 "amount":30.70,
+                                                                 "isCashPayment":false,
+                                                                 "description":"",
+                                                                 "date":"2024-05-20",
+                                                                 "paymentFrequency": "ONCE"
+                                                          }
+                                """))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
 
@@ -60,7 +62,8 @@ class ExpensesControllerTest {
                                                          "amount":30.70,
                                                          "isCashPayment":false,
                                                          "description":"",
-                                                         "date":"2024-05-20"
+                                                         "date":"2024-05-20",
+                                                         "paymentFrequency": "ONCE"
                                                 }
                         """))
                 .andExpect(jsonPath("$.id").exists());
@@ -77,14 +80,15 @@ class ExpensesControllerTest {
                 30.70,
                 false,
                 "",
-                LocalDate.of(2024,5,20)
+                LocalDate.of(2024, 5, 20),
+                PaymentFrequency.ONCE
         );
 
         expenseRepo.save(expense);
 
 
         mvc.perform(MockMvcRequestBuilders
-                .delete("/api/expenses/1"))
+                        .delete("/api/expenses/1"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
@@ -98,38 +102,41 @@ class ExpensesControllerTest {
                 30.70,
                 false,
                 "",
-                LocalDate.of(2024,5,20)
+                LocalDate.of(2024, 5, 20),
+                PaymentFrequency.ONCE
         );
 
         expenseRepo.save(expense);
 
 
         mvc.perform(MockMvcRequestBuilders
-                .put("/api/expenses/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("""
-                        {
-                        "id": "1",
-                        "category":"food",
-                        "vendor":"edeka",
-                        "amount":45.40,
-                        "isCashPayment":false,
-                        "description":"",
-                        "date":"2024-05-20"
-                        }
-                        """
-                ))
+                        .put("/api/expenses/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                "id": "1",
+                                "category":"food",
+                                "vendor":"edeka",
+                                "amount":45.40,
+                                "isCashPayment":false,
+                                "description":"",
+                                "date":"2024-05-20",
+                                "paymentFrequency": "ONCE"
+                                }
+                                """
+                        ))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
-                        {
-                        "id": "1",
-                        "category":"food",
-                        "vendor":"edeka",
-                        "amount":45.40,
-                        "isCashPayment":false,
-                        "description":"",
-                        "date":"2024-05-20"
-                        }
-"""));
+                                                {
+                                                "id": "1",
+                                                "category":"food",
+                                                "vendor":"edeka",
+                                                "amount":45.40,
+                                                "isCashPayment":false,
+                                                "description":"",
+                                                "date":"2024-05-20",
+                                                "paymentFrequency": "ONCE"
+                                                }
+                        """));
     }
 }
