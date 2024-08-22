@@ -1,6 +1,6 @@
 package org.example.backend.model;
 
-public enum TimeRage {
+public enum TimeRange {
     WEEK,
     MONTH,
     YEAR,

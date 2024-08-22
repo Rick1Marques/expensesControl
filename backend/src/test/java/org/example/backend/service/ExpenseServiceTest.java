@@ -1,5 +1,6 @@
 package org.example.backend.service;
 
+import org.example.backend.model.TimeRange;
 import org.example.backend.repo.ExpenseRepo;
 import org.example.backend.exception.ExpenseNotFoundException;
 import org.example.backend.model.Expense;
@@ -28,7 +29,7 @@ class ExpenseServiceTest {
                 30.70,
                 false,
                 "",
-                LocalDate.of(2024,5,20),
+                LocalDate.of(2024, 5, 20),
                 PaymentFrequency.ONCE
         );
         Expense expenseEx2 = new Expense(
@@ -38,7 +39,7 @@ class ExpenseServiceTest {
                 30.70,
                 false,
                 "",
-                LocalDate.of(2024,5,20),
+                LocalDate.of(2024, 5, 20),
                 PaymentFrequency.ONCE
         );
 
@@ -64,7 +65,7 @@ class ExpenseServiceTest {
                 30.70,
                 false,
                 "",
-                LocalDate.of(2024,5,20),
+                LocalDate.of(2024, 5, 20),
                 PaymentFrequency.ONCE
         );
 
@@ -75,7 +76,7 @@ class ExpenseServiceTest {
                 30.70,
                 false,
                 "",
-                LocalDate.of(2024,5,20),
+                LocalDate.of(2024, 5, 20),
                 PaymentFrequency.ONCE
         );
 
@@ -100,7 +101,7 @@ class ExpenseServiceTest {
                 30.70,
                 false,
                 "",
-                LocalDate.of(2024,5,20),
+                LocalDate.of(2024, 5, 20),
                 PaymentFrequency.ONCE
         );
 
@@ -126,7 +127,7 @@ class ExpenseServiceTest {
                 30.70,
                 false,
                 "",
-                LocalDate.of(2024,5,20),
+                LocalDate.of(2024, 5, 20),
                 PaymentFrequency.ONCE
         );
 
@@ -149,7 +150,7 @@ class ExpenseServiceTest {
                 10.50,
                 false,
                 "",
-                LocalDate.of(2024,5,20),
+                LocalDate.of(2024, 5, 20),
                 PaymentFrequency.ONCE
         );
 
@@ -160,7 +161,7 @@ class ExpenseServiceTest {
                 23.30,
                 false,
                 "",
-                LocalDate.of(2024,5,20),
+                LocalDate.of(2024, 5, 20),
                 PaymentFrequency.ONCE
         );
 
@@ -175,4 +176,73 @@ class ExpenseServiceTest {
         assertEquals(newExpense, result);
 
     }
+
+    @Test
+    void returnAll_findExpensesByTimeRage() {
+
+        LocalDate currentDate = LocalDate.now();
+
+        Expense expense1 = new Expense(
+                "1",
+                "food",
+                "edeka",
+                23.30,
+                false,
+                "",
+                LocalDate.of(2024, 5, 20),
+                PaymentFrequency.ONCE
+        );
+        Expense expense2 = new Expense(
+                "2",
+                "food",
+                "rewe",
+                56.40,
+                false,
+                "",
+                LocalDate.of(2024, 2, 12),
+                PaymentFrequency.ONCE
+        );
+
+        List<Expense> allExpenses = List.of(expense1, expense2);
+
+        LocalDate startDate = LocalDate.of(1970, 1, 1);
+        LocalDate endDate = LocalDate.of(9999, 12, 31);
+
+        when(expenseRepoMock.findByDateBetween(startDate, endDate)).thenReturn(allExpenses);
+
+        List<Expense> result = expenseService.findExpensesByTimeRage(TimeRange.ALL, currentDate);
+
+        assertEquals(allExpenses, result);
+    }
+
+    @Test
+    void returnExpense1_whenFrequenceMonth_findExpensesByTimeRage() {
+
+        LocalDate currentDate = LocalDate.now();
+
+        Expense expense1 = new Expense(
+                "1",
+                "food",
+                "edeka",
+                23.30,
+                false,
+                "",
+                LocalDate.now(),
+                PaymentFrequency.ONCE
+        );
+
+
+        List<Expense> expense1List = List.of(expense1);
+
+        LocalDate startDate = currentDate.withDayOfMonth(1);
+        LocalDate endDate = currentDate.withDayOfMonth(currentDate.lengthOfMonth());
+
+        when(expenseRepoMock.findByDateBetween(startDate, endDate)).thenReturn(expense1List);
+
+        List<Expense> result = expenseService.findExpensesByTimeRage(TimeRange.MONTH, currentDate);
+
+        assertEquals(expense1List, result);
+
+    }
+
 }

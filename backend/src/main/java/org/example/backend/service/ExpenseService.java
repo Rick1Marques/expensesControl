@@ -5,7 +5,7 @@ import org.example.backend.repo.ExpenseRepo;
 import org.example.backend.exception.ExpenseNotFoundException;
 import org.example.backend.model.Expense;
 import org.example.backend.model.ExpenseDto;
-import org.example.backend.model.TimeRage;
+import org.example.backend.model.TimeRange;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -60,27 +60,27 @@ public class ExpenseService {
 
     }
 
-    public List<Expense> findExpensesByTimeRage(TimeRage timeRange, LocalDate currentDate) {
+    public List<Expense> findExpensesByTimeRage(TimeRange timeRange, LocalDate currentDate) {
 
         LocalDate startDate;
         LocalDate endDate;
 
         switch (timeRange) {
-            case TimeRage.WEEK:
+            case TimeRange.WEEK:
                 startDate = currentDate.with(DayOfWeek.MONDAY);
                 endDate = startDate.plusWeeks(1).minusDays(1);
                 break;
-            case TimeRage.MONTH:
+            case TimeRange.MONTH:
                 startDate = currentDate.withDayOfMonth(1);
                 endDate = currentDate.withDayOfMonth(currentDate.lengthOfMonth());
                 break;
-            case TimeRage.YEAR:
+            case TimeRange.YEAR:
                 startDate = currentDate.withDayOfYear(1);
                 endDate = currentDate.withDayOfYear(currentDate.lengthOfYear());
                 break;
-            case TimeRage.ALL:
-                startDate = LocalDate.MIN;
-                endDate= LocalDate.MAX;
+            case TimeRange.ALL:
+                startDate = LocalDate.of(1970, 1, 1);
+                endDate = LocalDate.of(9999, 12, 31);
                 break;
             default:
                 startDate = currentDate.withDayOfMonth(1);
