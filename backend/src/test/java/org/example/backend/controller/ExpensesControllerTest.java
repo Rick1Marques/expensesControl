@@ -156,6 +156,7 @@ class ExpensesControllerTest {
 
         expenseRepo.save(expense);
 
+
         mvc.perform(MockMvcRequestBuilders
                         .get("/api/expenses/filter")
                         .param("timeRange", "ALL")

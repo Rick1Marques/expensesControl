@@ -181,7 +181,7 @@ class ExpenseServiceTest {
     @Test
     void returnExpense1_whenTimeRangeWeek_findExpensesByTimeRage() {
 
-        LocalDate currentDate = LocalDate.now();
+        LocalDate refDate = LocalDate.now();
 
         Expense expense1 = new Expense(
                 "1",
@@ -197,12 +197,40 @@ class ExpenseServiceTest {
 
         List<Expense> expense1List = List.of(expense1);
 
-        LocalDate startDate = currentDate.with(DayOfWeek.MONDAY);
-        LocalDate endDate = currentDate.with(DayOfWeek.SUNDAY);
+        LocalDate startDate = refDate.with(DayOfWeek.MONDAY);
+        LocalDate endDate = refDate.with(DayOfWeek.SUNDAY);
 
         when(expenseRepoMock.findByDateBetween(startDate, endDate)).thenReturn(expense1List);
 
-        List<Expense> result = expenseService.findExpensesByTimeRage("WEEK", currentDate);
+        List<Expense> result = expenseService.findExpensesByTimeRage("WEEK", refDate);
+
+        assertEquals(expense1List, result);
+
+    }
+
+    @Test
+    void returnExpense1_whenTimeRangeMonth_findExpensesByTimeRage() {
+
+        LocalDate refDate = LocalDate.now();
+
+        Expense expense1 = new Expense(
+                "1",
+                "food",
+                "edeka",
+                23.30,
+                false,
+                "",
+                LocalDate.now(),
+                PaymentFrequency.ONCE
+        );
+
+
+        List<Expense> expense1List = List.of(expense1);
+        LocalDate startDate = refDate.withDayOfMonth(1);
+        LocalDate endDate = refDate.withDayOfMonth(refDate.lengthOfMonth());
+        when(expenseRepoMock.findByDateBetween(startDate, endDate)).thenReturn(expense1List);
+
+        List<Expense> result = expenseService.findExpensesByTimeRage("MONTH", refDate);
 
         assertEquals(expense1List, result);
 
@@ -212,7 +240,7 @@ class ExpenseServiceTest {
     @Test
     void returnExpense1_whenTimeRangeYear_findExpensesByTimeRage() {
 
-        LocalDate currentDate = LocalDate.now();
+        LocalDate refDate = LocalDate.now();
 
         Expense expense1 = new Expense(
                 "1",
@@ -228,12 +256,12 @@ class ExpenseServiceTest {
 
         List<Expense> expense1List = List.of(expense1);
 
-        LocalDate startDate = currentDate.withDayOfYear(1);
-        LocalDate endDate = currentDate.withDayOfYear(currentDate.lengthOfYear());
+        LocalDate startDate = refDate.withDayOfYear(1);
+        LocalDate endDate = refDate.withDayOfYear(refDate.lengthOfYear());
 
         when(expenseRepoMock.findByDateBetween(startDate, endDate)).thenReturn(expense1List);
 
-        List<Expense> result = expenseService.findExpensesByTimeRage("YEAR", currentDate);
+        List<Expense> result = expenseService.findExpensesByTimeRage("YEAR", refDate);
 
         assertEquals(expense1List, result);
 
