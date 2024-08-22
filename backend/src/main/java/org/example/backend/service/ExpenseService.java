@@ -1,13 +1,16 @@
 package org.example.backend.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.backend.DB.ExpenseRepo;
+import org.example.backend.repo.ExpenseRepo;
 import org.example.backend.exception.ExpenseNotFoundException;
 import org.example.backend.model.Expense;
 import org.example.backend.model.ExpenseDto;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ExpenseService {
@@ -34,7 +37,7 @@ public class ExpenseService {
 
 
     public String deleteExpense(String id) throws ExpenseNotFoundException {
-        if(!expenseRepo.existsById(id)) {
+        if (!expenseRepo.existsById(id)) {
             throw new ExpenseNotFoundException(id);
         }
         expenseRepo.deleteById(id);
@@ -42,7 +45,7 @@ public class ExpenseService {
     }
 
     public Expense updateExpense(Expense expense, String id) throws ExpenseNotFoundException {
-        Expense oldExpense = expenseRepo.findById(id).orElseThrow(()-> new ExpenseNotFoundException(id));
+        Expense oldExpense = expenseRepo.findById(id).orElseThrow(() -> new ExpenseNotFoundException(id));
         Expense updatedExpense = oldExpense
                 .withCategory(expense.category())
                 .withVendor(expense.vendor())
@@ -54,5 +57,24 @@ public class ExpenseService {
 
         return expenseRepo.save(updatedExpense);
 
+    }
+
+    public List<Expense> findExpensesByTimeRage(String timeRange, LocalDate refDate) {
+
+        LocalDate startDate;
+        LocalDate endDate;
+
+        if(timeRange.equals("WEEK")){
+            startDate = refDate.with(DayOfWeek.MONDAY);
+            endDate = refDate.with(DayOfWeek.SUNDAY);
+        } else if(timeRange.equals("MONTH")){
+            startDate = refDate.withDayOfMonth(1);
+            endDate = refDate.withDayOfMonth(refDate.lengthOfMonth());
+        } else {
+            startDate = refDate.withDayOfYear(1);
+            endDate = refDate.withDayOfYear(refDate.lengthOfYear());
+        }
+
+        return expenseRepo.findByDateBetween(startDate, endDate);
     }
 }

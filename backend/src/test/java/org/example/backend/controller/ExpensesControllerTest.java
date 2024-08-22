@@ -1,6 +1,6 @@
 package org.example.backend.controller;
 
-import org.example.backend.DB.ExpenseRepo;
+import org.example.backend.repo.ExpenseRepo;
 import org.example.backend.model.Expense;
 import org.example.backend.model.PaymentFrequency;
 import org.junit.jupiter.api.Test;
@@ -138,5 +138,46 @@ class ExpensesControllerTest {
                                                 "paymentFrequency": "ONCE"
                                                 }
                         """));
+    }
+
+    @Test
+    void filterExpenses() throws Exception {
+
+        Expense expense = new Expense(
+                "1",
+                "food",
+                "edeka",
+                45.40,
+                false,
+                "",
+                LocalDate.of(2024, 5, 20),
+                PaymentFrequency.ONCE
+        );
+
+        expenseRepo.save(expense);
+
+
+        mvc.perform(MockMvcRequestBuilders
+                        .get("/api/expenses/filter")
+                        .param("timeRange", "ALL")
+                        .param("refDate", "2024-08-20")
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json("""
+                                                [
+                                                {
+                                                                               "id": "1",
+                                                                               "category":"food",
+                                                                               "vendor":"edeka",
+                                                                               "amount":45.40,
+                                                                               "isCashPayment":false,
+                                                                               "description":"",
+                                                                               "date":"2024-05-20",
+                                                                               "paymentFrequency": "ONCE"
+                                                                               }
+
+                        ]
+"""
+                ));
     }
 }
