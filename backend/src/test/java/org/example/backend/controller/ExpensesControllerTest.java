@@ -159,7 +159,7 @@ class ExpensesControllerTest {
         mvc.perform(MockMvcRequestBuilders
                         .get("/api/expenses/filter")
                         .param("timeRange", "ALL")
-                        .param("currentDate", "2024-08-20")
+                        .param("refDate", "2024-08-20")
                 )
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
