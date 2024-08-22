@@ -68,11 +68,7 @@ public class ExpenseService {
         switch (timeRange) {
             case TimeRange.WEEK:
                 startDate = currentDate.with(DayOfWeek.MONDAY);
-                endDate = startDate.plusWeeks(1).minusDays(1);
-                break;
-            case TimeRange.MONTH:
-                startDate = currentDate.withDayOfMonth(1);
-                endDate = currentDate.withDayOfMonth(currentDate.lengthOfMonth());
+                endDate = currentDate.with(DayOfWeek.SUNDAY);
                 break;
             case TimeRange.YEAR:
                 startDate = currentDate.withDayOfYear(1);
