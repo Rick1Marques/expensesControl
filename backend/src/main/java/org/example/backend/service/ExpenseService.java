@@ -59,20 +59,20 @@ public class ExpenseService {
 
     }
 
-    public List<Expense> findExpensesByTimeRage(String timeRange, LocalDate currentDate) {
+    public List<Expense> findExpensesByTimeRage(String timeRange, LocalDate refDate) {
 
         LocalDate startDate;
         LocalDate endDate;
 
         if(timeRange.equals("WEEK")){
-            startDate = currentDate.with(DayOfWeek.MONDAY);
-            endDate = currentDate.with(DayOfWeek.SUNDAY);
+            startDate = refDate.with(DayOfWeek.MONDAY);
+            endDate = refDate.with(DayOfWeek.SUNDAY);
         } else if(timeRange.equals("MONTH")){
-            startDate = currentDate.withDayOfMonth(1);
-            endDate = currentDate.withDayOfMonth(currentDate.lengthOfMonth());
+            startDate = refDate.withDayOfMonth(1);
+            endDate = refDate.withDayOfMonth(refDate.lengthOfMonth());
         } else {
-            startDate = currentDate.withDayOfYear(1);
-            endDate = currentDate.withDayOfYear(currentDate.lengthOfYear());
+            startDate = refDate.withDayOfYear(1);
+            endDate = refDate.withDayOfYear(refDate.lengthOfYear());
         }
 
         return expenseRepo.findByDateBetween(startDate, endDate);

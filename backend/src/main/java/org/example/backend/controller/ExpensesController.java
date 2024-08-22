@@ -24,9 +24,9 @@ public class ExpensesController {
     @GetMapping("/filter")
     public List<Expense> filterExpenses(
             @RequestParam String timeRange,
-            @RequestParam LocalDate currentDate
+            @RequestParam LocalDate refDate
             ) {
-        return expenseService.findExpensesByTimeRage(timeRange, currentDate);
+        return expenseService.findExpensesByTimeRage(timeRange, refDate);
     }
 
     @PostMapping

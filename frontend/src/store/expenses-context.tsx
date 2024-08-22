@@ -11,15 +11,21 @@ type ExpensesContext = {
     expensesGlobal: Expense[],
     expensesVendor: Group[],
     expensesCategory: Group[],
-    handleChangeTimeRange: (timeRange: string) => void
+    refDate: string | undefined,
+    handleChangeTimeRange: (timeRange: string) => void,
+    handleChangeRefDate: (refDate: string) => void
 }
 
 export const ExpensesContext = createContext<ExpensesContext>({
     expensesGlobal: [],
     expensesVendor: [],
     expensesCategory: [],
+    refDate: "",
     handleChangeTimeRange: () => {
-    }
+    },
+    handleChangeRefDate: () => {
+    },
+
 })
 
 type ExpensesContextProviderProps = {
@@ -30,19 +36,17 @@ export default function ExpensesContextProvider({children}: ExpensesContextProvi
     const [expensesCategory, setExpensesCategory] = useState<Group[]>([])
     const [expensesVendor, setExpensesVendor] = useState<Group[]>([])
     const [timeRange, setTimeRange] = useState<string>("MONTH")
+    const [refDate, setRefDate] = useState<string>(new Date().toISOString().split('T')[0])
 
     useEffect(() => {
         async function fetchData() {
-            const currentDate = new Date().toISOString().split('T')[0];
             try {
-                let response: AxiosResponse;
-                if (timeRange === "ALL") {
-                    response = await axios.get("api/expenses");
-                } else {
-                    response = await axios.get("api/expenses/filter", {
-                        params: {timeRange, currentDate}
+                const response: AxiosResponse = timeRange === "ALL"
+                ? await axios.get("api/expenses")
+                    : await axios.get("api/expenses/filter", {
+                        params: {timeRange, refDate}
                     })
-                }
+
                 if (response.status === 200) {
                     const data = await response.data;
                     console.log(data)
@@ -59,7 +63,8 @@ export default function ExpensesContextProvider({children}: ExpensesContextProvi
 
         fetchData()
 
-    }, [timeRange])
+    }, [timeRange, refDate])
+
 
     function groupExpenses(groupType: GroupType, data: Expense[]) {
         const groupedExpenses = data.reduce((acc, expense) => {
@@ -91,11 +96,17 @@ export default function ExpensesContextProvider({children}: ExpensesContextProvi
         setTimeRange(timeRange);
     }
 
+    function handleChangeRefDate(refDate: string) {
+        setRefDate(refDate);
+    }
+
     const ctxValue = {
         expensesGlobal: expenses,
         expensesCategory: expensesCategory,
         expensesVendor: expensesVendor,
-        handleChangeTimeRange: handleChangeTimeRange
+        refDate,
+        handleChangeTimeRange: handleChangeTimeRange,
+        handleChangeRefDate: handleChangeRefDate
     }
 
     return (
