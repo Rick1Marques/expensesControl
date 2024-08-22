@@ -5,7 +5,6 @@ import org.example.backend.repo.ExpenseRepo;
 import org.example.backend.exception.ExpenseNotFoundException;
 import org.example.backend.model.Expense;
 import org.example.backend.model.ExpenseDto;
-import org.example.backend.model.TimeRange;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -60,27 +59,20 @@ public class ExpenseService {
 
     }
 
-    public List<Expense> findExpensesByTimeRage(TimeRange timeRange, LocalDate currentDate) {
+    public List<Expense> findExpensesByTimeRage(String timeRange, LocalDate currentDate) {
 
         LocalDate startDate;
         LocalDate endDate;
 
-        switch (timeRange) {
-            case TimeRange.WEEK:
-                startDate = currentDate.with(DayOfWeek.MONDAY);
-                endDate = currentDate.with(DayOfWeek.SUNDAY);
-                break;
-            case TimeRange.YEAR:
-                startDate = currentDate.withDayOfYear(1);
-                endDate = currentDate.withDayOfYear(currentDate.lengthOfYear());
-                break;
-            case TimeRange.ALL:
-                startDate = LocalDate.of(1970, 1, 1);
-                endDate = LocalDate.of(9999, 12, 31);
-                break;
-            default:
-                startDate = currentDate.withDayOfMonth(1);
-                endDate = currentDate.withDayOfMonth(currentDate.lengthOfMonth());
+        if(timeRange.equals("WEEK")){
+            startDate = currentDate.with(DayOfWeek.MONDAY);
+            endDate = currentDate.with(DayOfWeek.SUNDAY);
+        } else if(timeRange.equals("MONTH")){
+            startDate = currentDate.withDayOfMonth(1);
+            endDate = currentDate.withDayOfMonth(currentDate.lengthOfMonth());
+        } else {
+            startDate = currentDate.withDayOfYear(1);
+            endDate = currentDate.withDayOfYear(currentDate.lengthOfYear());
         }
 
         return expenseRepo.findByDateBetween(startDate, endDate);

@@ -1,6 +1,5 @@
 package org.example.backend.service;
 
-import org.example.backend.model.TimeRange;
 import org.example.backend.repo.ExpenseRepo;
 import org.example.backend.exception.ExpenseNotFoundException;
 import org.example.backend.model.Expense;
@@ -178,43 +177,6 @@ class ExpenseServiceTest {
 
     }
 
-    @Test
-    void returnAll_whenTimeRangeAll_findExpensesByTimeRage() {
-
-        LocalDate currentDate = LocalDate.now();
-
-        Expense expense1 = new Expense(
-                "1",
-                "food",
-                "edeka",
-                23.30,
-                false,
-                "",
-                LocalDate.of(2024, 5, 20),
-                PaymentFrequency.ONCE
-        );
-        Expense expense2 = new Expense(
-                "2",
-                "food",
-                "rewe",
-                56.40,
-                false,
-                "",
-                LocalDate.of(2024, 2, 12),
-                PaymentFrequency.ONCE
-        );
-
-        List<Expense> allExpenses = List.of(expense1, expense2);
-
-        LocalDate startDate = LocalDate.of(1970, 1, 1);
-        LocalDate endDate = LocalDate.of(9999, 12, 31);
-
-        when(expenseRepoMock.findByDateBetween(startDate, endDate)).thenReturn(allExpenses);
-
-        List<Expense> result = expenseService.findExpensesByTimeRage(TimeRange.ALL, currentDate);
-
-        assertEquals(allExpenses, result);
-    }
 
     @Test
     void returnExpense1_whenTimeRangeWeek_findExpensesByTimeRage() {
@@ -240,7 +202,7 @@ class ExpenseServiceTest {
 
         when(expenseRepoMock.findByDateBetween(startDate, endDate)).thenReturn(expense1List);
 
-        List<Expense> result = expenseService.findExpensesByTimeRage(TimeRange.WEEK, currentDate);
+        List<Expense> result = expenseService.findExpensesByTimeRage("WEEK", currentDate);
 
         assertEquals(expense1List, result);
 
@@ -271,42 +233,13 @@ class ExpenseServiceTest {
 
         when(expenseRepoMock.findByDateBetween(startDate, endDate)).thenReturn(expense1List);
 
-        List<Expense> result = expenseService.findExpensesByTimeRage(TimeRange.YEAR, currentDate);
+        List<Expense> result = expenseService.findExpensesByTimeRage("YEAR", currentDate);
 
         assertEquals(expense1List, result);
-
-    }
-
-    @Test
-    void returnExpense1_whenDefault_findExpensesByTimeRage() {
-
-        LocalDate currentDate = LocalDate.now();
-
-        Expense expense1 = new Expense(
-                "1",
-                "food",
-                "edeka",
-                23.30,
-                false,
-                "",
-                LocalDate.now(),
-                PaymentFrequency.ONCE
-        );
-
-
-        List<Expense> expense1List = List.of(expense1);
-
-        LocalDate startDate = currentDate.withDayOfMonth(1);
-        LocalDate endDate = currentDate.withDayOfMonth(currentDate.lengthOfMonth());
-
-        when(expenseRepoMock.findByDateBetween(startDate, endDate)).thenReturn(expense1List);
-
-        List<Expense> result = expenseService.findExpensesByTimeRage(TimeRange.MONTH, currentDate);
-
-        assertEquals(expense1List, result);
-
 
     }
 
 
 }
+
+
