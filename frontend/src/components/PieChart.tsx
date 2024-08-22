@@ -16,9 +16,6 @@ export default function PieChart() {
         },
         {fixed: 0, variable: 0})
 
-    console.log(graphData)
-
-
     ChartJS.register(Tooltip, Legend, ArcElement)
 
     const data = {
