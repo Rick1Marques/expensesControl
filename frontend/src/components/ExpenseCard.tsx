@@ -4,7 +4,7 @@ type ExpenseCardProps = {
     category: string
     date: string
     isCashPayment: boolean
-    paymentFrequency: "once" | "weekly" | "monthly" | "quarterly" | "biannual" | "yearly"
+    paymentFrequency: "ONCE" | "WEEKLY" | "MONTHLY" | "QUARTERLY" | "BIANNUAL" | "YEARLY"
 }
 
 export default function ExpenseCard({vendor, amount, isCashPayment, date, paymentFrequency}: ExpenseCardProps) {

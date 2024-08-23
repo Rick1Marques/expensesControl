@@ -9,7 +9,6 @@ type Field = "amount" | "date"
 
 export default function ExpensesList() {
     const {expensesGlobal} = useContext(ExpensesContext)
-
     const [sortOrder, setSortOrder] = useState<Order>("asc")
     const [sortField, setSortField] = useState<Field>("date")
     const [expenses, setExpenses] = useState<Expense[]>([])
