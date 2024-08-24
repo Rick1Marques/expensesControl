@@ -5,7 +5,7 @@ import {groupExpenses} from "../util/groupExpenses.ts";
 
 
 type Group = { name: string; totalAmount: number; totalEntries: number }
-type GroupType = "vendor" | "category" | "date" ;
+type GroupType = "vendor" | "category" | "date" | "expenses";
 type ExpensesContext = {
     expensesGlobal: Expense[],
     expensesVendor: Group[],
@@ -85,22 +85,27 @@ export default function ExpensesContextProvider({children}: ExpensesContextProvi
         setRefDate(refDate);
     }
 
-    function handleChangeSelectedGroupsFilter(group: string, groupType: GroupType) {
-        if (selectedGroupsFilter?.groupType === groupType) {
-            let groups = [...selectedGroupsFilter.selectedGroups]
-            if (groups.includes(group)) {
-                groups = groups.filter(e => e != group)
-                // Should I turn the value of selectedGroupsFilter to null?
-                // if()
-            } else {
-                groups.push(group)
+    function handleChangeSelectedGroupsFilter(identifier: string, groupType: GroupType) {
+        let groups = selectedGroupsFilter?.groupType === groupType
+            ? [...selectedGroupsFilter.selectedGroups]
+            : [];
+
+        if (groups.includes(identifier)) {
+            groups = groups.filter(e => e !== identifier);
+            // If no groups are left and groupType is not "expenses", set filter to null
+            if (groups.length === 0 && groupType !== "expenses") {
+                setSelectedGroupsFilter(null);
+                return;
             }
-            setSelectedGroupsFilter({selectedGroups: groups, groupType})
+        } else if (groupType !== "expenses") {
+            groups.push(identifier);
         } else {
-            setSelectedGroupsFilter({selectedGroups: [group], groupType})
+            groups = [identifier];
         }
-        console.log(selectedGroupsFilter)
+        setSelectedGroupsFilter({selectedGroups: groups, groupType});
+        console.log(selectedGroupsFilter);
     }
+
 
     const ctxValue = {
         expensesGlobal: expenses,
