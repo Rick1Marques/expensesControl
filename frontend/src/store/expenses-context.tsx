@@ -5,15 +5,20 @@ import {groupExpenses} from "../util/groupExpenses.ts";
 
 
 type Group = { name: string; totalAmount: number; totalEntries: number }
-
+type GroupType = "vendor" | "category" | "date";
 type ExpensesContext = {
     expensesGlobal: Expense[],
     expensesVendor: Group[],
     expensesCategory: Group[],
-    refDate: string | undefined,
+    refDate: string,
     timeRange: string,
+    selectedGroupsFilter: {
+        selectedGroups: string[],
+        groupType: GroupType
+    } | null,
     handleChangeTimeRange: (timeRange: string) => void,
-    handleChangeRefDate: (refDate: string) => void
+    handleChangeRefDate: (refDate: string) => void,
+    handleChangeSelectedGroupsFilter: (group: string, groupType: GroupType) => void,
 }
 
 export const ExpensesContext = createContext<ExpensesContext>({
@@ -22,11 +27,13 @@ export const ExpensesContext = createContext<ExpensesContext>({
     expensesCategory: [],
     refDate: "",
     timeRange: "",
+    selectedGroupsFilter: null,
     handleChangeTimeRange: () => {
     },
     handleChangeRefDate: () => {
     },
-
+    handleChangeSelectedGroupsFilter: () => {
+    }
 })
 
 type ExpensesContextProviderProps = {
@@ -38,12 +45,16 @@ export default function ExpensesContextProvider({children}: ExpensesContextProvi
     const [expensesVendor, setExpensesVendor] = useState<Group[]>([])
     const [timeRange, setTimeRange] = useState<string>("MONTH")
     const [refDate, setRefDate] = useState<string>(new Date().toISOString().split('T')[0])
+    const [selectedGroupsFilter, setSelectedGroupsFilter] = useState<{
+        selectedGroups: string[],
+        groupType: GroupType
+    } | null>(null)
 
     useEffect(() => {
         async function fetchData() {
             try {
                 const response: AxiosResponse = timeRange === "ALL"
-                ? await axios.get("api/expenses")
+                    ? await axios.get("api/expenses")
                     : await axios.get("api/expenses/filter", {
                         params: {timeRange, refDate}
                     })
@@ -74,14 +85,26 @@ export default function ExpensesContextProvider({children}: ExpensesContextProvi
         setRefDate(refDate);
     }
 
+    function handleChangeSelectedGroupsFilter(group: string, groupType: GroupType) {
+        if (selectedGroupsFilter?.groupType === groupType) {
+            const groups = [...selectedGroupsFilter.selectedGroups]
+            groups.push(group)
+            setSelectedGroupsFilter({selectedGroups: groups, groupType})
+        } else {
+            setSelectedGroupsFilter({selectedGroups: [group], groupType})
+        }
+    }
+
     const ctxValue = {
         expensesGlobal: expenses,
         expensesCategory,
         expensesVendor,
         refDate,
         timeRange,
-        handleChangeTimeRange: handleChangeTimeRange,
-        handleChangeRefDate: handleChangeRefDate
+        selectedGroupsFilter,
+        handleChangeTimeRange,
+        handleChangeRefDate,
+        handleChangeSelectedGroupsFilter
     }
 
     return (
