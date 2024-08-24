@@ -92,7 +92,6 @@ export default function ExpensesContextProvider({children}: ExpensesContextProvi
 
         if (groups.includes(identifier)) {
             groups = groups.filter(e => e !== identifier);
-            // If no groups are left and groupType is not "expenses", set filter to null
             if (groups.length === 0 && groupType !== "expenses") {
                 setSelectedGroupsFilter(null);
                 return;
@@ -103,7 +102,6 @@ export default function ExpensesContextProvider({children}: ExpensesContextProvi
             groups = [identifier];
         }
         setSelectedGroupsFilter({selectedGroups: groups, groupType});
-        console.log(selectedGroupsFilter);
     }
 
 
