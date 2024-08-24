@@ -25,7 +25,9 @@ export default function PieChart() {
             {
                 label: "Expenses",
                 data: [graphData.fixed, graphData.variable],
-                backgroundColor: ["blue", "green"],
+                backgroundColor: ["rgba(54, 162, 285, 0.3)", "rgba(75, 212, 192, 0.3)"],
+                borderColor: ["rgba(54, 162, 285)", "rgba(75, 212, 192)"],
+                borderWidth: 1,
                 hoverOffset: 4,
             }
         ]

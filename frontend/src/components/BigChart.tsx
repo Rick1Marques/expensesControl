@@ -1,11 +1,10 @@
-import {Line} from "react-chartjs-2";
+import {Bar} from "react-chartjs-2";
 import {
+    BarElement,
     CategoryScale,
     Chart as ChartJS,
     Legend,
     LinearScale,
-    LineElement,
-    PointElement,
     Title,
     Tooltip
 } from "chart.js";
@@ -21,8 +20,7 @@ export default function BigChart() {
     ChartJS.register(
         CategoryScale,
         LinearScale,
-        PointElement,
-        LineElement,
+        BarElement,
         Title,
         Tooltip,
         Legend
@@ -38,7 +36,7 @@ export default function BigChart() {
     let amounts: number[] = [];
     let label: string = ""
 
-    function getAmounts(){
+    function getAmounts() {
         return groupExpenses("date", expensesGlobal)
     }
 
@@ -46,7 +44,7 @@ export default function BigChart() {
         case "WEEK":
             labels = weekDays
             amounts = labels.map(day => {
-                const dayExpenses = getAmounts().find(g => new Date(g.name).toLocaleDateString('en-US', { weekday: 'long' }) === day);
+                const dayExpenses = getAmounts().find(g => new Date(g.name).toLocaleDateString('en-US', {weekday: 'long'}) === day);
                 return dayExpenses ? dayExpenses.totalAmount : 0;
             });
             label = "$ / day"
@@ -54,8 +52,8 @@ export default function BigChart() {
         case "MONTH": {
             const year = new Date(refDate!).getFullYear()
             const month = new Date(refDate!).getMonth()
-            const days = new Date(year,month,0).getDate()
-            for(let i= 1; i<=days; i++){
+            const days = new Date(year, month, 0).getDate()
+            for (let i = 1; i <= days; i++) {
                 labels.push(i.toString())
             }
             amounts = labels.map(day => {
@@ -94,7 +92,10 @@ export default function BigChart() {
         datasets: [
             {
                 label: label,
-                data: amounts
+                data: amounts,
+                backgroundColor: "rgba(54, 162, 285, 0.3)",
+                borderColor: "rgb(54, 162, 285)",
+                borderWidth: 1,
             }
         ]
     }
@@ -103,7 +104,7 @@ export default function BigChart() {
 
     return (
         <>
-            <Line data={data}/>
+            <Bar data={data}/>
         </>
     )
 }
