@@ -10,8 +10,6 @@ export default function ExpenseDetailCard({id}:ExpenseDetailProps){
 
     const expense = expensesGlobal.find(expense => expense.id === id)
 
-
-
     return(
         <article>
             <p>{expense!.category}</p>
