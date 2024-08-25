@@ -23,7 +23,7 @@ export default function GroupList({title}: ListProps) {
 
     function sortExpenses(field: Field, order: Order) {
 
-       let groupedExpenses: Group[] = []
+       let groupedExpenses: Group[]
         if( title === "vendor"){
             groupedExpenses = [...expensesVendor];
         } else {
@@ -44,7 +44,7 @@ export default function GroupList({title}: ListProps) {
         setExpensesGroup(sortedExpensesGroup)
     }
         sortExpenses(sortField, sortOrder);
-    }, [expensesGlobal, sortOrder, sortField, title])
+    }, [expensesGlobal, sortOrder, sortField, title, expensesCategory, expensesVendor])
 
 
 
@@ -70,7 +70,7 @@ export default function GroupList({title}: ListProps) {
 
         <ul>
             {expensesGroup.map(group => {
-                return (<GroupCard key={group.name} name={group.name} totalAmount={group.totalAmount} totalEntries={group.totalEntries}/>)
+                return (<GroupCard key={group.name} name={group.name} totalAmount={group.totalAmount} totalEntries={group.totalEntries} groupType={title}/>)
             })}
         </ul>
     </section>)
