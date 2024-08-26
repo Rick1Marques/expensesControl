@@ -1,4 +1,3 @@
-//write this as util???
 import {Expense} from "../model/Expense.ts";
 
 type Group = { name: string; totalAmount: number; totalEntries: number }

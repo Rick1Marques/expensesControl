@@ -5,7 +5,8 @@ import {groupExpenses} from "../util/groupExpenses.ts";
 
 
 type Group = { name: string; totalAmount: number; totalEntries: number }
-type GroupType = "vendor" | "category" | "date" | "expenses";
+type GroupTypeFilter = "vendor" | "category" | "date" | "expenses";
+
 type ExpensesContext = {
     expensesGlobal: Expense[],
     expensesVendor: Group[],
@@ -14,11 +15,11 @@ type ExpensesContext = {
     timeRange: string,
     selectedGroupsFilter: {
         selectedGroups: string[],
-        groupType: GroupType
+        groupType: GroupTypeFilter
     } | null,
     handleChangeTimeRange: (timeRange: string) => void,
     handleChangeRefDate: (refDate: string) => void,
-    handleChangeSelectedGroupsFilter: (group: string, groupType: GroupType) => void,
+    handleChangeSelectedGroupsFilter: (group: string, groupType: GroupTypeFilter) => void,
 }
 
 export const ExpensesContext = createContext<ExpensesContext>({
@@ -47,7 +48,7 @@ export default function ExpensesContextProvider({children}: ExpensesContextProvi
     const [refDate, setRefDate] = useState<string>(new Date().toISOString().split('T')[0])
     const [selectedGroupsFilter, setSelectedGroupsFilter] = useState<{
         selectedGroups: string[],
-        groupType: GroupType
+        groupType: GroupTypeFilter
     } | null>(null)
 
     useEffect(() => {
@@ -85,8 +86,8 @@ export default function ExpensesContextProvider({children}: ExpensesContextProvi
         setRefDate(refDate);
     }
 
-    function handleChangeSelectedGroupsFilter(identifier: string, groupType: GroupType) {
-        let groups = selectedGroupsFilter?.groupType === groupType
+    function handleChangeSelectedGroupsFilter(identifier: string, GroupTypeFilter: GroupTypeFilter) {
+        let groups = selectedGroupsFilter?.groupType === GroupTypeFilter
             ? [...selectedGroupsFilter.selectedGroups]
             : [];
 
@@ -96,12 +97,12 @@ export default function ExpensesContextProvider({children}: ExpensesContextProvi
                 setSelectedGroupsFilter(null);
                 return;
             }
-        } else if (groupType !== "expenses") {
+        } else if (GroupTypeFilter !== "expenses") {
             groups.push(identifier);
         } else {
             groups = [identifier];
         }
-        setSelectedGroupsFilter({selectedGroups: groups, groupType});
+        setSelectedGroupsFilter({selectedGroups: groups,groupType: GroupTypeFilter});
     }
 
 
