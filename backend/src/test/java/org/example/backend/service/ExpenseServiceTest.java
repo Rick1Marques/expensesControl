@@ -190,17 +190,17 @@ class ExpenseServiceTest {
                 23.30,
                 false,
                 "",
-                LocalDate.now(),
+                LocalDate.of(2024, 8, 28),
                 PaymentFrequency.ONCE
         );
 
 
         List<Expense> expense1List = List.of(expense1);
 
-        LocalDate startDate = refDate.with(DayOfWeek.MONDAY);
-        LocalDate endDate = refDate.with(DayOfWeek.SUNDAY);
+        LocalDate startDate = LocalDate.of(2024, 8, 26);
+        LocalDate endDate = LocalDate.of(2024, 8, 31);
 
-        when(expenseRepoMock.findByDateBetween(startDate, endDate)).thenReturn(expense1List);
+        when(expenseRepoMock.findByDateGreaterThanEqualAndDateLessThanEqual(startDate, endDate)).thenReturn(expense1List);
 
         List<Expense> result = expenseService.findExpensesByTimeRage("WEEK", refDate);
 
@@ -228,7 +228,7 @@ class ExpenseServiceTest {
         List<Expense> expense1List = List.of(expense1);
         LocalDate startDate = refDate.withDayOfMonth(1);
         LocalDate endDate = refDate.withDayOfMonth(refDate.lengthOfMonth());
-        when(expenseRepoMock.findByDateBetween(startDate, endDate)).thenReturn(expense1List);
+        when(expenseRepoMock.findByDateGreaterThanEqualAndDateLessThanEqual(startDate, endDate)).thenReturn(expense1List);
 
         List<Expense> result = expenseService.findExpensesByTimeRage("MONTH", refDate);
 
@@ -259,7 +259,7 @@ class ExpenseServiceTest {
         LocalDate startDate = refDate.withDayOfYear(1);
         LocalDate endDate = refDate.withDayOfYear(refDate.lengthOfYear());
 
-        when(expenseRepoMock.findByDateBetween(startDate, endDate)).thenReturn(expense1List);
+        when(expenseRepoMock.findByDateGreaterThanEqualAndDateLessThanEqual(startDate, endDate)).thenReturn(expense1List);
 
         List<Expense> result = expenseService.findExpensesByTimeRage("YEAR", refDate);
 
