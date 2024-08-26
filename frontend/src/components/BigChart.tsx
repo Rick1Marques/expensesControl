@@ -44,7 +44,7 @@ export default function BigChart() {
     const chartDataSets: DataSet[] = []
 
     function getGroupInfos(groupType: GroupTypeFilter) {
-        if(groupType === "expenses"){
+        if (groupType === "expenses") {
             return
         }
         return groupExpenses(groupType, expensesGlobal)
@@ -69,12 +69,12 @@ export default function BigChart() {
                     const selectedGroupExpensesGroup = groupExpenses("date", selectedGroupExpenses)
 
                     expensesData = labels.map(day => {
-                        const dayExpenses = selectedGroupExpensesGroup.find(group => new Date(group.name).getDate() === parseInt(day));
+                        const dayExpenses = selectedGroupExpensesGroup.find(group => new Date(group.name).toLocaleDateString('en-US', {weekday: 'long'}) === day);
                         return dayExpenses ? dayExpenses.totalAmount : 0;
                     })
                     chartDataSets.push(createDataSetForGroup(group, expensesData, getColor(index)))
+                    console.log(expensesData)
                 })
-
             } else {
                 expensesData = labels.map(day => {
                     const dayExpenses = getGroupInfos("date")!.find(group => new Date(group.name).toLocaleDateString('en-US', {weekday: 'long'}) === day);
