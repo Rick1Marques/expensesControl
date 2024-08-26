@@ -9,7 +9,7 @@ export default function DetailsScreen() {
 
     const {selectedGroups, groupType} = selectedGroupsFilter || {};
 
-    if (!selectedGroupsFilter || selectedGroups?.length === 0) {
+    if (!selectedGroupsFilter) {
         return <PieChart/>
     } else {
         return (

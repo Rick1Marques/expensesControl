@@ -92,7 +92,7 @@ export default function ExpensesContextProvider({children}: ExpensesContextProvi
 
         if (groups.includes(identifier)) {
             groups = groups.filter(e => e !== identifier);
-            if (groups.length === 0 && groupType !== "expenses") {
+            if (groups.length === 0) {
                 setSelectedGroupsFilter(null);
                 return;
             }
