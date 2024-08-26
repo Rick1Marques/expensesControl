@@ -64,10 +64,20 @@ public class ExpenseService {
         LocalDate startDate;
         LocalDate endDate;
 
-        if(timeRange.equals("WEEK")){
+        if (timeRange.equals("WEEK")) {
             startDate = refDate.with(DayOfWeek.MONDAY);
             endDate = refDate.with(DayOfWeek.SUNDAY);
-        } else if(timeRange.equals("MONTH")){
+            if (refDate.isAfter(endDate)) {
+                startDate = startDate.minusWeeks(1);
+                endDate = endDate.minusWeeks(1);
+            }
+            if(refDate.getMonth() != startDate.getMonth()){
+                startDate = refDate.withDayOfMonth(1);
+            }
+            if(refDate.getMonth() != endDate.getMonth()){
+                endDate = refDate.withDayOfMonth(refDate.lengthOfMonth());
+            }
+        } else if (timeRange.equals("MONTH")) {
             startDate = refDate.withDayOfMonth(1);
             endDate = refDate.withDayOfMonth(refDate.lengthOfMonth());
         } else {
@@ -75,6 +85,6 @@ public class ExpenseService {
             endDate = refDate.withDayOfYear(refDate.lengthOfYear());
         }
 
-        return expenseRepo.findByDateBetween(startDate, endDate);
+        return expenseRepo.findByDateGreaterThanEqualAndDateLessThanEqual(startDate, endDate);
     }
 }
