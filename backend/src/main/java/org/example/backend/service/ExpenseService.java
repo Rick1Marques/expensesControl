@@ -66,10 +66,6 @@ public class ExpenseService {
         if (timeRange.equals("WEEK")) {
             startDate = refDate.with(DayOfWeek.MONDAY);
             endDate = refDate.with(DayOfWeek.SUNDAY);
-            if (refDate.isAfter(endDate)) {
-                startDate = startDate.minusWeeks(1);
-                endDate = endDate.minusWeeks(1);
-            }
             if (refDate.getMonth() != startDate.getMonth()) {
                 startDate = refDate.withDayOfMonth(1);
             }
