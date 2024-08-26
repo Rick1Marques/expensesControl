@@ -7,7 +7,6 @@ import org.example.backend.model.ExpenseDto;
 import org.example.backend.model.PaymentFrequency;
 import org.junit.jupiter.api.Test;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -200,7 +199,7 @@ class ExpenseServiceTest {
         LocalDate startDate = LocalDate.of(2024, 8, 26);
         LocalDate endDate = LocalDate.of(2024, 8, 31);
 
-        when(expenseRepoMock.findByDateGreaterThanEqualAndDateLessThanEqual(startDate, endDate)).thenReturn(expense1List);
+        when(expenseRepoMock.findByDateBetween(startDate, endDate)).thenReturn(expense1List);
 
         List<Expense> result = expenseService.findExpensesByTimeRage("WEEK", refDate);
 
@@ -228,7 +227,7 @@ class ExpenseServiceTest {
         List<Expense> expense1List = List.of(expense1);
         LocalDate startDate = refDate.withDayOfMonth(1);
         LocalDate endDate = refDate.withDayOfMonth(refDate.lengthOfMonth());
-        when(expenseRepoMock.findByDateGreaterThanEqualAndDateLessThanEqual(startDate, endDate)).thenReturn(expense1List);
+        when(expenseRepoMock.findByDateBetween(startDate, endDate)).thenReturn(expense1List);
 
         List<Expense> result = expenseService.findExpensesByTimeRage("MONTH", refDate);
 
@@ -259,7 +258,7 @@ class ExpenseServiceTest {
         LocalDate startDate = refDate.withDayOfYear(1);
         LocalDate endDate = refDate.withDayOfYear(refDate.lengthOfYear());
 
-        when(expenseRepoMock.findByDateGreaterThanEqualAndDateLessThanEqual(startDate, endDate)).thenReturn(expense1List);
+        when(expenseRepoMock.findByDateBetween(startDate, endDate)).thenReturn(expense1List);
 
         List<Expense> result = expenseService.findExpensesByTimeRage("YEAR", refDate);
 

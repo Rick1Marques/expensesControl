@@ -60,7 +60,6 @@ public class ExpenseService {
     }
 
     public List<Expense> findExpensesByTimeRage(String timeRange, LocalDate refDate) {
-
         LocalDate startDate;
         LocalDate endDate;
 
@@ -71,10 +70,10 @@ public class ExpenseService {
                 startDate = startDate.minusWeeks(1);
                 endDate = endDate.minusWeeks(1);
             }
-            if(refDate.getMonth() != startDate.getMonth()){
+            if (refDate.getMonth() != startDate.getMonth()) {
                 startDate = refDate.withDayOfMonth(1);
             }
-            if(refDate.getMonth() != endDate.getMonth()){
+            if (refDate.getMonth() != endDate.getMonth()) {
                 endDate = refDate.withDayOfMonth(refDate.lengthOfMonth());
             }
         } else if (timeRange.equals("MONTH")) {
@@ -85,6 +84,6 @@ public class ExpenseService {
             endDate = refDate.withDayOfYear(refDate.lengthOfYear());
         }
 
-        return expenseRepo.findByDateGreaterThanEqualAndDateLessThanEqual(startDate, endDate);
+        return expenseRepo.findByDateBetween(startDate, endDate);
     }
 }
