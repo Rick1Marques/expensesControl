@@ -87,6 +87,7 @@ export default function ExpensesContextProvider({children}: ExpensesContextProvi
     }
 
     function handleChangeSelectedGroupsFilter(identifier: string, GroupTypeFilter: GroupTypeFilter) {
+        const limitAmountOfGroups = 5
         let groups = selectedGroupsFilter?.groupType === GroupTypeFilter
             ? [...selectedGroupsFilter.selectedGroups]
             : [];
@@ -97,6 +98,8 @@ export default function ExpensesContextProvider({children}: ExpensesContextProvi
                 setSelectedGroupsFilter(null);
                 return;
             }
+        } else if(groups.length === limitAmountOfGroups){
+                groups[groups.length - 1] = identifier
         } else if (GroupTypeFilter !== "expenses") {
             groups.push(identifier);
         } else {
