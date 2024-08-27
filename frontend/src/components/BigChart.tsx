@@ -13,7 +13,7 @@ import {useContext} from "react";
 import {ExpensesContext} from "../store/expenses-context.tsx";
 import {groupExpenses} from "../util/groupExpenses.ts";
 import {getFirstAndLastYear} from "../util/getFirstAndLastYear.ts";
-import {getColor} from "../util/getcolor.ts";
+import {getColor} from "../util/getColor.ts";
 
 type DataSet = {
     label: string
@@ -23,6 +23,11 @@ type DataSet = {
     borderWidth: number
 }
 type GroupTypeFilter = "vendor" | "category" | "date" | "expenses";
+
+type selectedGroupsFilter = {
+    selectedGroups: string[],
+    groupType: GroupTypeFilter
+} | null
 
 const weekDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
@@ -43,12 +48,6 @@ export default function BigChart() {
     let expensesData: number[];
     const chartDataSets: DataSet[] = []
 
-    function getGroupInfos(groupType: GroupTypeFilter) {
-        if (groupType === "expenses") {
-            return
-        }
-        return groupExpenses(groupType, expensesGlobal)
-    }
 
     function createDataSetForGroup(label: string, data: number[], colors: string[]) {
         return {
@@ -60,81 +59,73 @@ export default function BigChart() {
         };
     }
 
+    function matchLabelWithDate(dateStr: string, label: string, timeRange: string, index: number) {
+        switch (timeRange) {
+            case "WEEK":
+                return new Date(dateStr).toLocaleDateString('en-US', {weekday: 'long'}) === label
+            case "MONTH":
+                return new Date(dateStr).getDate() === parseInt(label)
+            case "YEAR":
+                return new Date(dateStr).getMonth() === index
+            case "ALL":
+                return new Date(dateStr).getFullYear() === parseInt(label)
+        }
+    }
+
+    function generateExpensesData(labels: string[], selectedGroupsFilter: selectedGroupsFilter) {
+        if (selectedGroupsFilter && selectedGroupsFilter.groupType != "expenses") {
+            selectedGroupsFilter.selectedGroups.forEach((group, index) => {
+                const selectedGroupExpenses = expensesGlobal.filter(expenses => expenses[selectedGroupsFilter.groupType as keyof Expense] === group)
+                const selectedGroupExpensesGroup = groupExpenses("date", selectedGroupExpenses)
+
+                expensesData = labels.map((label, index) => {
+                    const groupData = selectedGroupExpensesGroup.find(group => {
+                        return matchLabelWithDate(group.name, label, timeRange, index);
+                    })
+                    return groupData ? groupData.totalAmount : 0;
+                })
+                chartDataSets.push(createDataSetForGroup(group, expensesData, getColor(index)))
+            })
+        } else {
+            expensesData = labels.map((label, index) => {
+                if (timeRange === "YEAR" || timeRange === "ALL") {
+                    const groupData = groupExpenses("date", expensesGlobal)!
+                        .filter(group => matchLabelWithDate(group.name, label, timeRange, index));
+                    return groupData.reduce((acc, group) => acc + group.totalAmount, 0);
+                } else {
+                    const groupData = groupExpenses("date", expensesGlobal)!.find(group => matchLabelWithDate(group.name, label, timeRange, index));
+                    return groupData ? groupData.totalAmount : 0;
+                }
+            });
+            chartDataSets.push(createDataSetForGroup("$", expensesData, getColor(0)))
+        }
+    }
+
+
     switch (timeRange) {
         case "WEEK":
             labels = weekDays
-            if (selectedGroupsFilter && selectedGroupsFilter.groupType != "expenses") {
-                selectedGroupsFilter.selectedGroups.forEach((group, index) => {
-                    const selectedGroupExpenses = expensesGlobal.filter(expenses => expenses[selectedGroupsFilter.groupType as keyof Expense] === group)
-                    const selectedGroupExpensesGroup = groupExpenses("date", selectedGroupExpenses)
-
-                    expensesData = labels.map(day => {
-                        const dayExpenses = selectedGroupExpensesGroup.find(group => new Date(group.name).toLocaleDateString('en-US', {weekday: 'long'}) === day);
-                        return dayExpenses ? dayExpenses.totalAmount : 0;
-                    })
-                    chartDataSets.push(createDataSetForGroup(group, expensesData, getColor(index)))
-                    console.log(expensesData)
-                })
-            } else {
-                expensesData = labels.map(day => {
-                    const dayExpenses = getGroupInfos("date")!.find(group => new Date(group.name).toLocaleDateString('en-US', {weekday: 'long'}) === day);
-                    return dayExpenses ? dayExpenses.totalAmount : 0;
-                });
-                chartDataSets.push(createDataSetForGroup("$ / day", expensesData, getColor(0)))
-            }
+            generateExpensesData(labels, selectedGroupsFilter)
             break;
 
-        case "MONTH": {
+        case "MONTH":
             const year = new Date(refDate!).getFullYear()
-            const month = new Date(refDate!).getMonth()
+            const month = new Date(refDate!).getMonth() + 1
             const days = new Date(year, month, 0).getDate()
+
             for (let i = 1; i <= days; i++) {
                 labels.push(i.toString())
             }
-            if (selectedGroupsFilter && selectedGroupsFilter.groupType != "expenses") {
-                selectedGroupsFilter.selectedGroups.forEach((group, index) => {
-                    const selectedGroupExpenses = expensesGlobal.filter(expenses => expenses[selectedGroupsFilter.groupType as keyof Expense] === group)
-                    const selectedGroupExpensesGroup = groupExpenses("date", selectedGroupExpenses)
 
-                    expensesData = labels.map(day => {
-                        const dayExpenses = selectedGroupExpensesGroup.find(group => new Date(group.name).getDate() === parseInt(day));
-                        return dayExpenses ? dayExpenses.totalAmount : 0;
-                    })
-                    chartDataSets.push(createDataSetForGroup(group, expensesData, getColor(index)))
-
-                })
-            } else {
-                expensesData = labels.map(day => {
-                    const dayExpenses = getGroupInfos("date")!.find(group => new Date(group.name).getDate() === parseInt(day));
-                    return dayExpenses ? dayExpenses.totalAmount : 0;
-                })
-                chartDataSets.push(createDataSetForGroup("$ / day", expensesData, getColor(0)))
-            }
-        }
+            generateExpensesData(labels, selectedGroupsFilter)
             break;
 
         case "YEAR":
             labels = months
-            expensesData = labels.map((_month, index) => {
-                const monthExpenses = getGroupInfos("date")!.filter(group => new Date(group.name).getMonth() === index);
-                return monthExpenses.reduce((acc, e) => acc + e.totalAmount, 0);
-            });
-            if (selectedGroupsFilter && selectedGroupsFilter.groupType != "expenses") {
-                selectedGroupsFilter.selectedGroups.forEach((group, index) => {
-                    const selectedGroupExpenses = expensesGlobal.filter(expenses => expenses[selectedGroupsFilter.groupType as keyof Expense] === group)
-                    const selectedGroupExpensesGroup = groupExpenses("date", selectedGroupExpenses)
 
-                    expensesData = labels.map((_month, index) => {
-                        const monthExpenses = selectedGroupExpensesGroup.find(group => new Date(group.name).getMonth() === index);
-                        return monthExpenses ? monthExpenses.totalAmount : 0;
-                    })
-                    chartDataSets.push(createDataSetForGroup(group, expensesData, getColor(index)))
+            generateExpensesData(labels, selectedGroupsFilter)
+            break;
 
-                })
-            } else {
-                chartDataSets.push(createDataSetForGroup("$ / month", expensesData, getColor(0)))
-            }
-            break
 
         case "ALL": {
             const firstYear = getFirstAndLastYear(expensesGlobal).firstYear
@@ -142,25 +133,8 @@ export default function BigChart() {
             for (let i = firstYear; i <= lastYear; i++) {
                 labels.push(i.toString())
             }
-            expensesData = labels.map(year => {
-                const yearExpenses = getGroupInfos("date")!.filter(group => new Date(group.name).getFullYear() === parseInt(year));
-                return yearExpenses.reduce((acc, e) => acc + e.totalAmount, 0);
-            });
-            if (selectedGroupsFilter && selectedGroupsFilter.groupType != "expenses") {
-                selectedGroupsFilter.selectedGroups.forEach((group, index) => {
-                    const selectedGroupExpenses = expensesGlobal.filter(expenses => expenses[selectedGroupsFilter.groupType as keyof Expense] === group)
-                    const selectedGroupExpensesGroup = groupExpenses("date", selectedGroupExpenses)
 
-                    expensesData = labels.map(year => {
-                        const yearExpenses = selectedGroupExpensesGroup.find(group => new Date(group.name).getFullYear() === parseInt(year));
-                        return yearExpenses ? yearExpenses.totalAmount : 0;
-                    })
-                    chartDataSets.push(createDataSetForGroup(group, expensesData, getColor(index)))
-
-                })
-            } else {
-                chartDataSets.push(createDataSetForGroup("$ / year", expensesData, getColor(0)))
-            }
+            generateExpensesData(labels, selectedGroupsFilter)
             break;
         }
     }
