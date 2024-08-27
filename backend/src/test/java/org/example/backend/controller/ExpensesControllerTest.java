@@ -3,6 +3,7 @@ package org.example.backend.controller;
 import org.example.backend.repo.ExpenseRepo;
 import org.example.backend.model.Expense;
 import org.example.backend.model.PaymentFrequency;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -26,6 +27,12 @@ class ExpensesControllerTest {
 
     @Autowired
     ExpenseRepo expenseRepo;
+
+    @BeforeEach
+    void setUp() {
+        // Clear the database before each test
+        expenseRepo.deleteAll();
+    }
 
     @Test
     @DirtiesContext
@@ -93,6 +100,7 @@ class ExpensesControllerTest {
     }
 
     @Test
+    @DirtiesContext
     void putExpense() throws Exception {
 
         Expense expense = new Expense(
@@ -141,6 +149,7 @@ class ExpensesControllerTest {
     }
 
     @Test
+    @DirtiesContext
     void filterExpenses() throws Exception {
 
         Expense expense = new Expense(
@@ -156,7 +165,6 @@ class ExpensesControllerTest {
 
         expenseRepo.save(expense);
 
-
         mvc.perform(MockMvcRequestBuilders
                         .get("/api/expenses/filter")
                         .param("timeRange", "ALL")
@@ -166,18 +174,17 @@ class ExpensesControllerTest {
                 .andExpect(MockMvcResultMatchers.content().json("""
                                                 [
                                                 {
-                                                                               "id": "1",
-                                                                               "category":"food",
-                                                                               "vendor":"edeka",
-                                                                               "amount":45.40,
-                                                                               "isCashPayment":false,
-                                                                               "description":"",
-                                                                               "date":"2024-05-20",
-                                                                               "paymentFrequency": "ONCE"
-                                                                               }
-
-                        ]
-"""
-                ));
+                                                    "id": "1",
+                                                    "category":"food",
+                                                    "vendor":"edeka",
+                                                    "amount":45.40,
+                                                    "isCashPayment":false,
+                                                    "description":"",
+                                                    "date":"2024-05-20",
+                                                    "paymentFrequency": "ONCE"
+                                                }
+                                                ]
+                """));
     }
+
 }

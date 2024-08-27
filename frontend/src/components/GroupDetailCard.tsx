@@ -19,7 +19,7 @@ export default function GroupDetailCard({groupName, groupType}: GroupDetailCardP
         return acc
     }, {groupsTotalAmount: 0, groupsTotalEntries: 0})
 
-    if (!groupData && !selectedGroupsFilter) {
+    if (!groupData || !selectedGroupsFilter) {
         return <p>Loading...</p>
     }
 

@@ -6,8 +6,8 @@ import org.example.backend.model.Expense;
 import org.example.backend.model.ExpenseDto;
 import org.example.backend.model.PaymentFrequency;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.annotation.DirtiesContext;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +21,7 @@ class ExpenseServiceTest {
     private final ExpenseService expenseService = new ExpenseService(expenseRepoMock);
 
     @Test
+    @DirtiesContext
     void findAllExpenses() {
         Expense expenseEx1 = new Expense(
                 "1",
@@ -57,6 +58,7 @@ class ExpenseServiceTest {
     }
 
     @Test
+    @DirtiesContext
     void addExpense() {
 
         ExpenseDto expenseDto = new ExpenseDto(
@@ -92,6 +94,7 @@ class ExpenseServiceTest {
 
 
     @Test
+    @DirtiesContext
     void deleteExpense() {
 
         Expense expenseEx1 = new Expense(
@@ -118,6 +121,7 @@ class ExpenseServiceTest {
     }
 
     @Test
+    @DirtiesContext
     void throwException_deleteExpense() {
 
         Expense expenseEx1 = new Expense(
@@ -142,6 +146,7 @@ class ExpenseServiceTest {
 
 
     @Test
+    @DirtiesContext
     void updateExpense() {
         Expense oldExpense = new Expense(
                 "1",
@@ -179,9 +184,10 @@ class ExpenseServiceTest {
 
 
     @Test
+    @DirtiesContext
     void returnExpense1_whenTimeRangeWeek_findExpensesByTimeRage() {
 
-        LocalDate refDate = LocalDate.now();
+        LocalDate refDate = LocalDate.of(2024, 8, 28);
 
         Expense expense1 = new Expense(
                 "1",
@@ -190,15 +196,75 @@ class ExpenseServiceTest {
                 23.30,
                 false,
                 "",
-                LocalDate.now(),
+                LocalDate.of(2024, 8, 28),
                 PaymentFrequency.ONCE
         );
 
 
         List<Expense> expense1List = List.of(expense1);
 
-        LocalDate startDate = refDate.with(DayOfWeek.MONDAY);
-        LocalDate endDate = refDate.with(DayOfWeek.SUNDAY);
+        LocalDate startDate = LocalDate.of(2024, 8, 26);
+        LocalDate endDate = LocalDate.of(2024, 8, 31);
+
+        when(expenseRepoMock.findByDateBetween(startDate, endDate)).thenReturn(expense1List);
+
+        List<Expense> result = expenseService.findExpensesByTimeRage("WEEK", refDate);
+
+        assertEquals(expense1List, result);
+
+    }
+    @Test
+    @DirtiesContext
+    void returnExpense1_whenTimeRangeWeekEndMonth_findExpensesByTimeRage() {
+
+        LocalDate refDate = LocalDate.of(2024, 8, 28);
+
+        Expense expense1 = new Expense(
+                "1",
+                "food",
+                "edeka",
+                23.30,
+                false,
+                "",
+                LocalDate.of(2024, 8, 26),
+                PaymentFrequency.ONCE
+        );
+
+
+        List<Expense> expense1List = List.of(expense1);
+
+        LocalDate startDate = LocalDate.of(2024, 8, 26);
+        LocalDate endDate = LocalDate.of(2024, 8, 31);
+
+        when(expenseRepoMock.findByDateBetween(startDate, endDate)).thenReturn(expense1List);
+
+        List<Expense> result = expenseService.findExpensesByTimeRage("WEEK", refDate);
+
+        assertEquals(expense1List, result);
+
+    }
+    @Test
+    @DirtiesContext
+    void returnExpense1_whenTimeRangeWeekBeginning_findExpensesByTimeRage() {
+
+        LocalDate refDate = LocalDate.of(2024, 8, 2);
+
+        Expense expense1 = new Expense(
+                "1",
+                "food",
+                "edeka",
+                23.30,
+                false,
+                "",
+                LocalDate.of(2024, 8, 3),
+                PaymentFrequency.ONCE
+        );
+
+
+        List<Expense> expense1List = List.of(expense1);
+
+        LocalDate startDate = LocalDate.of(2024, 8, 1);
+        LocalDate endDate = LocalDate.of(2024, 8, 4);
 
         when(expenseRepoMock.findByDateBetween(startDate, endDate)).thenReturn(expense1List);
 
@@ -209,6 +275,7 @@ class ExpenseServiceTest {
     }
 
     @Test
+    @DirtiesContext
     void returnExpense1_whenTimeRangeMonth_findExpensesByTimeRage() {
 
         LocalDate refDate = LocalDate.now();
@@ -238,6 +305,7 @@ class ExpenseServiceTest {
 
 
     @Test
+    @DirtiesContext
     void returnExpense1_whenTimeRangeYear_findExpensesByTimeRage() {
 
         LocalDate refDate = LocalDate.now();
