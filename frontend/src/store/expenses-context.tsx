@@ -80,6 +80,8 @@ export default function ExpensesContextProvider({children}: ExpensesContextProvi
 
     function handleChangeTimeRange(timeRange: string) {
         setTimeRange(timeRange);
+        // maybe later adapt and find things that are contained on the new array
+        setSelectedGroupsFilter(null)
     }
 
     function handleChangeRefDate(refDate: string) {
