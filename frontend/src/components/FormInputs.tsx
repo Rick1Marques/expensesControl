@@ -1,6 +1,7 @@
 import TextField from "@mui/material/TextField";
 import {FormControl, FormControlLabel, InputLabel, MenuItem, Select, SelectChangeEvent, Switch} from "@mui/material";
 import {useState} from "react";
+import {Expense} from "../model/Expense.ts";
 
 const paymentFrequencyOpt = ["ONCE", "WEEKLY", "MONTHLY", "YEARLY"]
 
@@ -8,8 +9,12 @@ function toCamelCase(word: string) {
     return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
 }
 
-export default function FormInputs() {
-    const [paymentFrequency, setPaymentFrequency] = useState('');
+type FormInputsProps = {
+    expense?: Expense
+}
+
+export default function FormInputs({ expense }: FormInputsProps) {
+    const [paymentFrequency, setPaymentFrequency] = useState(expense?.paymentFrequency || '');
 
     const handleChange = (event: SelectChangeEvent) => {
         setPaymentFrequency(event.target.value as string);
@@ -27,9 +32,9 @@ export default function FormInputs() {
                 type="text"
                 fullWidth
                 variant="standard"
+                defaultValue={expense?.category || ''}
             />
             <TextField
-                autoFocus
                 required
                 margin="dense"
                 id="vendor"
@@ -38,9 +43,9 @@ export default function FormInputs() {
                 type="text"
                 fullWidth
                 variant="standard"
+                defaultValue={expense?.vendor || ''}
             />
             <TextField
-                autoFocus
                 required
                 margin="dense"
                 id="amount"
@@ -49,6 +54,7 @@ export default function FormInputs() {
                 type="number"
                 fullWidth
                 variant="standard"
+                defaultValue={expense?.amount || ""}
                 slotProps={{
                     htmlInput: {
                         step: "0.01"
@@ -56,7 +62,7 @@ export default function FormInputs() {
                 }}
             />
             <FormControlLabel
-                control={<Switch/>}
+                control={<Switch defaultChecked={expense?.isCashPayment || false} />}
                 label="Cash Payment"
                 name="isCashPayment"
             />
@@ -67,6 +73,7 @@ export default function FormInputs() {
                 multiline
                 maxRows={4}
                 fullWidth
+                defaultValue={expense?.description || ''}
             />
             <TextField
                 label="Date"
@@ -75,6 +82,7 @@ export default function FormInputs() {
                 fullWidth
                 margin="dense"
                 name="date"
+                defaultValue={expense?.date || ''}
                 slotProps={{
                     inputLabel: {
                         shrink: true,
@@ -86,6 +94,7 @@ export default function FormInputs() {
                 <Select
                     labelId="paymentFrequency"
                     id="paymentFrequency"
+                    name="paymentFrequency"
                     value={paymentFrequency}
                     label="Payment frequency"
                     onChange={handleChange}

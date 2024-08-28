@@ -58,13 +58,7 @@ export default function ExpensesList() {
                 {expenses.map(expense =>
                     <ExpenseCard
                         key={expense.id}
-                        id={expense.id}
-                        vendor={expense.vendor}
-                        amount={expense.amount}
-                        category={expense.category}
-                        date={expense.date}
-                        isCashPayment={expense.isCashPayment}
-                        paymentFrequency={expense.paymentFrequency}
+                        expense={expense}
                     />)}
             </ul>
         </section>
