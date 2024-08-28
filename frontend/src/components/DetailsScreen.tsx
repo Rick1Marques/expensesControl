@@ -14,7 +14,8 @@ export default function DetailsScreen() {
     return (
         <Box
             sx={{
-                minWidth: "400px"
+                width: "30%",
+                minWidth: "300px"
             }}>
             {!selectedGroupsFilter ? <PieChart/> : (
                 <>

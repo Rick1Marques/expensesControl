@@ -134,7 +134,6 @@ export default function BigChart() {
             for (let i = firstYear; i <= lastYear; i++) {
                 labels.push(i.toString())
             }
-
             generateExpensesData(labels, selectedGroupsFilter)
             break;
         }
@@ -147,7 +146,8 @@ export default function BigChart() {
 
     return (
         <Box sx={{
-            minWidth: "800px",
+            width: "60%",
+            minWidth: "600px",
         }}>
             <Bar data={data}/>
         </Box>

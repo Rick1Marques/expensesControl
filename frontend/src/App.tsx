@@ -1,29 +1,21 @@
 import ExpensesList from "./components/ExpensesList.tsx";
 import ExpensesContextProvider from "./store/expenses-context.tsx";
 import GroupList from "./components/GroupList.tsx";
-import TimeRangeFilter from "./components/TimeRangeFilter.tsx";
 import BigChart from "./components/BigChart.tsx";
 import DetailsScreen from "./components/DetailsScreen.tsx";
-import FormDialog from "./components/FormDialog.tsx";
-import {Box, Container} from "@mui/material";
+import {Box} from "@mui/material";
+import SelectionCockpit from "./components/SelectionCockpit.tsx";
 
 export default function App() {
 
     return (
         <ExpensesContextProvider>
-            <Container sx={{
+            <Box sx={{
                 display: "flex",
                 flexDirection: "column",
-                gap: "15px"
+                gap: "15px",
             }}>
-                <Box
-                    sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                    }}>
-                    <TimeRangeFilter/>
-                    <FormDialog type="add"/>
-                </Box>
+                <SelectionCockpit/>
 
                 <Box
                     sx={{
@@ -37,14 +29,14 @@ export default function App() {
                 <Box
                     sx={{
                         display: "flex",
-                        justifyContent: "space-around"
+                        justifyContent: "space-between"
                     }}>
                     <GroupList title={"vendor"}/>
                     <GroupList title={"category"}/>
                     <ExpensesList/>
                 </Box>
 
-            </Container>
+            </Box>
         </ExpensesContextProvider>
     )
 }

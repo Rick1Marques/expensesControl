@@ -1,5 +1,14 @@
 import TextField from "@mui/material/TextField";
-import {FormControl, FormControlLabel, InputLabel, MenuItem, Select, SelectChangeEvent, Switch} from "@mui/material";
+import {
+    Box,
+    FormControl,
+    FormControlLabel,
+    InputLabel,
+    MenuItem,
+    Select,
+    SelectChangeEvent,
+    Switch
+} from "@mui/material";
 import {useState} from "react";
 import {Expense} from "../model/Expense.ts";
 
@@ -21,7 +30,7 @@ export default function FormInputs({ expense }: FormInputsProps) {
     };
 
     return (
-        <>
+        <Box>
             <TextField
                 autoFocus
                 required
@@ -102,6 +111,6 @@ export default function FormInputs({ expense }: FormInputsProps) {
                     {paymentFrequencyOpt.map(opt => <MenuItem key={opt} value={opt}>{toCamelCase(opt)}</MenuItem>)}
                 </Select>
             </FormControl>
-        </>
+        </Box>
     )
 }

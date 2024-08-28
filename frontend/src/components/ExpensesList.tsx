@@ -2,7 +2,8 @@ import {ChangeEvent, useContext, useEffect, useState} from "react";
 import {Expense} from "../model/Expense.ts";
 import ExpenseCard from "./ExpenseCard.tsx";
 import {ExpensesContext} from "../store/expenses-context.tsx";
-import {Box, List} from "@mui/material";
+import {Box, ButtonGroup, FormControl, List, MenuItem, Select} from "@mui/material";
+import Button from "@mui/material/Button";
 
 
 type Order = "asc" | "desc"
@@ -48,31 +49,42 @@ export default function ExpensesList() {
     return (
         <Box
             sx={{
-                flexBasis: "30%",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                height: "600px",
-                gap: "10px"
+                height: "700px",
+                gap: "10px",
+                minWidth: "30%"
             }}>
             <h2>Expenses List</h2>
             <Box
-            sx={{
-                display: "flex",
-                justifyContent: "space-between"
-            }}
+                sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    borderBottom: "1px solid black",
+                    pb: "10px",
+                    width: "100%",
+                }}
             >
                 <Box>
-                    <button onClick={() => handleFieldChange("date")}>Date</button>
-                    <button onClick={() => handleFieldChange("amount")}>Amount</button>
+                    <ButtonGroup variant="text" aria-label="Basic button group">
+                    <Button size="small" onClick={() => handleFieldChange("date")}>Date</Button>
+                    <Button size="small" onClick={() => handleFieldChange("amount")}>Amount</Button>
+                    </ButtonGroup>
+
                 </Box>
-                <Box>
-                    <label htmlFor="sortOrder"/>
-                    <select id="sortOrder" value={sortOrder} onChange={handleOrderChange}>
-                        <option value="asc">Ascending</option>
-                        <option value="desc">Descending</option>
-                    </select>
-                </Box>
+                <FormControl variant="standard" sx={{minWidth: 80}}>
+                    <Select
+                        labelId="sortOrder"
+                        id="sortOrder"
+                        value={sortOrder}
+                        onChange={handleOrderChange}
+                        label="sortOrder"
+                    >
+                        <MenuItem value="asc">Asc</MenuItem>
+                        <MenuItem value="desc">Desc</MenuItem>
+                    </Select>
+                </FormControl>
             </Box>
 
             <List
