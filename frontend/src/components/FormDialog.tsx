@@ -7,10 +7,21 @@ import FormInputs from "./FormInputs.tsx";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {ExpenseDto} from "../model/ExpenseDto.ts";
+import {Expense} from "../model/Expense.ts";
 
-export default function FormDialog() {
+type FormDialogProps = {
+    type: "add" | "edit",
+    expense?: Expense
+}
+type FormData = Expense | ExpenseDto;
+
+type PaymentFrequency = "ONCE" | "WEEKLY" | "MONTHLY" | "YEARLY"
+
+export default function FormDialog({type, expense}: FormDialogProps) {
     const [open, setOpen] = useState(false);
-    const [formJson, setFormJson] = useState<ExpenseDto | null>(null);
+    const [formJson, setFormJson] = useState<FormData | null>(null);
+
+
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -22,10 +33,14 @@ export default function FormDialog() {
     useEffect(() => {
         async function postExpense() {
             if (formJson) {
-                console.log(formJson)
                 try {
-                    const response = await axios.post("api/expenses", formJson)
-                    console.log("Success!!!", response.data)
+                    if ("id" in formJson) {
+                        const response = await axios.put(`api/expenses/${formJson.id}`, formJson)
+                        console.log("Expense updated with success!!!", response.data)
+                    } else {
+                        const response = await axios.post("api/expenses", formJson)
+                        console.log("Expense added with success!!!", response.data)
+                    }
                 } catch (err) {
                     console.log(err);
                 }
@@ -33,13 +48,15 @@ export default function FormDialog() {
         }
 
         postExpense()
+
+
     }, [formJson])
 
 
     return (
         <>
             <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-                Add New Expense
+                {type === "add" ? "Add New Expense" : "Edit"}
             </Button>
             <Dialog
                 open={open}
@@ -49,30 +66,30 @@ export default function FormDialog() {
                     onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
                         event.preventDefault();
                         const formData = new FormData(event.currentTarget);
+                        const formJsonDto: FormData = Object.fromEntries((formData as any).entries());
 
-                        const formJson: ExpenseDto = {
-                            category: formData.get("category") as string,
-                            vendor: formData.get("vendor") as string,
-                            amount: parseFloat(formData.get("amount") as string), // Convert string to number
-                            isCashPayment: formData.get("isCashPayment") === "true", // Convert string to boolean
-                            description: formData.get("description") as string,
-                            date: formData.get("date") as string,
-                            paymentFrequency: formData.get("paymentFrequency") as "ONCE" | "WEEKLY" | "MONTHLY" | "YEARLY", // Type assertion
-                        };
+                        formJsonDto.isCashPayment = formJsonDto.isCashPayment === "on";
+                        formJsonDto.amount = parseFloat(parseFloat(formJsonDto.amount).toFixed(2));
+                        formJsonDto.paymentFrequency = formData.get('paymentFrequency') as PaymentFrequency;
 
-                        setFormJson(formJson)
-                        console.log(formJson)
+                        if (type === "add") {
+                            setFormJson(formJsonDto)
+                        } else {
+                            const formJsonExpense: Expense = {...formJsonDto, id: expense!.id}
+                            setFormJson(formJsonExpense)
+                        }
                         handleClose();
                     },
                 }}
             >
-                <DialogTitle>Add new Expense</DialogTitle>
+
+                <DialogTitle>{type === "add" ? "Add New Expense" : "Edit Expense"}</DialogTitle>
                 <DialogContent>
-                    <FormInputs/>
+                    <FormInputs expense={expense}/>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button type="submit">Add</Button>
+                    <Button type="submit">{type === "add" ? "Add" : "Edit"}</Button>
                 </DialogActions>
             </Dialog>
         </>

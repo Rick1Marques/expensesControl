@@ -12,7 +12,7 @@ export default function App() {
   return (
     <ExpensesContextProvider>
         <TimeRangeFilter/>
-        <FormDialog/>
+        <FormDialog type="add"/>
         <DetailsScreen/>
         <BigChart/>
         <GroupList title={"vendor"}/>
