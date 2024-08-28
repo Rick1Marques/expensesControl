@@ -33,10 +33,14 @@ export default function FormDialog({type, expense}: FormDialogProps) {
     useEffect(() => {
         async function postExpense() {
             if (formJson) {
-                console.log(formJson)
                 try {
-                    const response = await axios.post("api/expenses", formJson)
-                    console.log("Success!!!", response.data)
+                    if ("id" in formJson) {
+                        const response = await axios.put(`api/expenses/${formJson.id}`, formJson)
+                        console.log("Expense updated with success!!!", response.data)
+                    } else {
+                        const response = await axios.post("api/expenses", formJson)
+                        console.log("Expense added with success!!!", response.data)
+                    }
                 } catch (err) {
                     console.log(err);
                 }
