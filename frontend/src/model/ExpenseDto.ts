@@ -1,5 +1,4 @@
-export type Expense = {
-    id: string,
+export type ExpenseDto = {
     category: string,
     vendor: string,
     amount: number,
