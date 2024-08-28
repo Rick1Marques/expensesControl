@@ -1,5 +1,6 @@
 import {useContext} from "react";
 import {ExpensesContext} from "../store/expenses-context.tsx";
+import { ListItemButton} from "@mui/material";
 
 type GroupCardProps = {
     name: string,
@@ -12,14 +13,10 @@ export default function GroupCard({name, totalAmount, totalEntries, groupType}:G
     const {handleChangeSelectedGroupsFilter}=useContext(ExpensesContext)
 
     return(
-        <li>
-            <article>
-                <button onClick={()=>handleChangeSelectedGroupsFilter(name, groupType)}>
+        <ListItemButton onClick={()=>handleChangeSelectedGroupsFilter(name, groupType)}>
                     <p>{name}</p>
                     <p>{totalAmount}</p>
                     <p>{totalEntries}</p>
-                </button>
-            </article>
-        </li>
+        </ListItemButton>
     )
 }

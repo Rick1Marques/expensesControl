@@ -2,7 +2,7 @@ import {useContext} from "react";
 import {ExpensesContext} from "../store/expenses-context.tsx";
 import FormDialog from "./FormDialog.tsx";
 import {Expense} from "../model/Expense.ts";
-import {IconButton} from "@mui/material";
+import {IconButton, ListItem} from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import InfoIcon from '@mui/icons-material/Info';
 import axios from "axios";
@@ -27,7 +27,7 @@ export default function ExpenseCard({expense}: ExpenseCardProps) {
     }
 
     return (
-        <li>
+        <ListItem>
             <article>
                 <p>{vendor}</p>
                 <p>{amount}</p>
@@ -43,7 +43,7 @@ export default function ExpenseCard({expense}: ExpenseCardProps) {
                     <InfoIcon/>
                 </IconButton>
             </article>
-        </li>
+        </ListItem>
     )
 
 }

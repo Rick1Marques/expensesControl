@@ -2,6 +2,7 @@ import {ChangeEvent, useContext, useEffect, useState} from "react";
 import {Expense} from "../model/Expense.ts";
 import ExpenseCard from "./ExpenseCard.tsx";
 import {ExpensesContext} from "../store/expenses-context.tsx";
+import {Box, List} from "@mui/material";
 
 
 type Order = "asc" | "desc"
@@ -45,22 +46,46 @@ export default function ExpensesList() {
 
 
     return (
-        <section>
+        <Box
+            sx={{
+                flexBasis: "30%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                height: "600px",
+                gap: "10px"
+            }}>
             <h2>Expenses List</h2>
-            <button onClick={() => handleFieldChange("date")}>Date</button>
-            <button onClick={() => handleFieldChange("amount")}>Amount</button>
-            <label htmlFor="sortOrder"/>
-            <select id="sortOrder" value={sortOrder} onChange={handleOrderChange}>
-                <option value="asc">Ascending</option>
-                <option value="desc">Descending</option>
-            </select>
-            <ul>
+            <Box
+            sx={{
+                display: "flex",
+                justifyContent: "space-between"
+            }}
+            >
+                <Box>
+                    <button onClick={() => handleFieldChange("date")}>Date</button>
+                    <button onClick={() => handleFieldChange("amount")}>Amount</button>
+                </Box>
+                <Box>
+                    <label htmlFor="sortOrder"/>
+                    <select id="sortOrder" value={sortOrder} onChange={handleOrderChange}>
+                        <option value="asc">Ascending</option>
+                        <option value="desc">Descending</option>
+                    </select>
+                </Box>
+            </Box>
+
+            <List
+                sx={{
+                    width: "100%",
+                    overflowY: "auto"
+                }}>
                 {expenses.map(expense =>
                     <ExpenseCard
                         key={expense.id}
                         expense={expense}
                     />)}
-            </ul>
-        </section>
+            </List>
+        </Box>
     )
 }

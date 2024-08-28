@@ -8,6 +8,7 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import {ExpenseDto} from "../model/ExpenseDto.ts";
 import {Expense} from "../model/Expense.ts";
+import {Box} from "@mui/material";
 
 type FormDialogProps = {
     type: "add" | "edit",
@@ -54,7 +55,7 @@ export default function FormDialog({type, expense}: FormDialogProps) {
 
 
     return (
-        <>
+        <Box>
             <Button variant="outlined" color="primary" onClick={handleClickOpen}>
                 {type === "add" ? "Add New Expense" : "Edit"}
             </Button>
@@ -92,6 +93,6 @@ export default function FormDialog({type, expense}: FormDialogProps) {
                     <Button type="submit">{type === "add" ? "Add" : "Edit"}</Button>
                 </DialogActions>
             </Dialog>
-        </>
+        </Box>
     );
 }

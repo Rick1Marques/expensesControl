@@ -14,6 +14,7 @@ import {ExpensesContext} from "../store/expenses-context.tsx";
 import {groupExpenses} from "../util/groupExpenses.ts";
 import {getFirstAndLastYear} from "../util/getFirstAndLastYear.ts";
 import {getColor} from "../util/getColor.ts";
+import {Box} from "@mui/material";
 
 type DataSet = {
     label: string
@@ -145,8 +146,10 @@ export default function BigChart() {
     }
 
     return (
-        <>
+        <Box sx={{
+            minWidth: "800px",
+        }}>
             <Bar data={data}/>
-        </>
+        </Box>
     )
 }
