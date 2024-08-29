@@ -4,9 +4,10 @@ import FormDialog from "./FormDialog.tsx";
 import {Expense} from "../model/Expense.ts";
 import {Box, Card, CardActions, CardContent, IconButton, ListItem, Typography} from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
-import InfoIcon from '@mui/icons-material/Info';
 import axios from "axios";
-
+import Tooltip from '@mui/material/Tooltip';
+import {currencyFormatter, formatDate} from "../util/formatting.ts";
+import FindInPageOutlinedIcon from '@mui/icons-material/FindInPageOutlined';
 type ExpenseCardProps = {
     expense: Expense;
 }
@@ -30,10 +31,12 @@ export default function ExpenseCard({expense}: ExpenseCardProps) {
         <ListItem sx={{p: "1px"}}>
             <Card sx={{width: "100%"}}>
                 <CardContent
-                sx={{pb: "0px",
+                    sx={{
+                        pb: "0px",
                         "&:last-child": {
                             pb: 0
-                        }}}
+                        }
+                    }}
                 >
                     <Box
                         sx={{
@@ -48,8 +51,8 @@ export default function ExpenseCard({expense}: ExpenseCardProps) {
                                 alignItems: "center",
                                 m: "2% 8%"
                             }}>
-                        <Typography variant="h5">{vendor}</Typography>
-                        <Typography variant="subtitle1">{date}</Typography>
+                            <Typography variant="h5">{vendor}</Typography>
+                            <Typography variant="subtitle1">{formatDate(date)}</Typography>
                         </Box>
                         <Box
                             sx={{
@@ -58,8 +61,8 @@ export default function ExpenseCard({expense}: ExpenseCardProps) {
                                 alignItems: "center",
                                 m: "2% 8%"
                             }}>
-                        <Typography variant="h5">{amount}$</Typography>
-                        {isCashPayment && <Typography variant="caption">cash</Typography>}
+                            <Typography variant="h5">{currencyFormatter.format(amount)}</Typography>
+                            {isCashPayment && <Typography variant="caption">cash</Typography>}
                         </Box>
 
                     </Box>
@@ -70,12 +73,17 @@ export default function ExpenseCard({expense}: ExpenseCardProps) {
                         }}
                     >
                         <FormDialog type="edit" expense={expense}/>
-                        <IconButton color="info" onClick={() => handleChangeSelectedGroupsFilter(id, "expenses")}>
-                            <InfoIcon fontSize="large"/>
-                        </IconButton>
-                        <IconButton color="warning" onClick={handleDelete}>
-                            <DeleteIcon/>
-                        </IconButton>
+                        <Tooltip title="Details">
+                            <IconButton color="info" onClick={() => handleChangeSelectedGroupsFilter(id, "expenses")}>
+                                <FindInPageOutlinedIcon fontSize="large"/>
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Delete">
+                            <IconButton color="warning" onClick={handleDelete}>
+                                <DeleteIcon/>
+                            </IconButton>
+                        </Tooltip>
+
                     </CardActions>
                 </CardContent>
             </Card>

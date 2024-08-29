@@ -1,6 +1,7 @@
 import {useContext} from "react";
 import {ExpensesContext} from "../store/expenses-context.tsx";
 import { ListItemButton, Paper, Typography} from "@mui/material";
+import {currencyFormatter} from "../util/formatting.ts";
 
 type GroupCardProps = {
     name: string,
@@ -29,7 +30,7 @@ export default function GroupCard({name, totalAmount, groupType}: GroupCardProps
             }}
             >
                 <Typography variant="h5">{name[0].toUpperCase() + name.slice(1)}</Typography>
-                <Typography variant="h6">{totalAmount}$</Typography>
+                <Typography variant="h6">{currencyFormatter.format(totalAmount)}</Typography>
             </Paper>
         </ListItemButton>
     )

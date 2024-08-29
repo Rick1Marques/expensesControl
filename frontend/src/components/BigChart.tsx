@@ -14,8 +14,7 @@ import {ExpensesContext} from "../store/expenses-context.tsx";
 import {groupExpenses} from "../util/groupExpenses.ts";
 import {getFirstAndLastYear} from "../util/getFirstAndLastYear.ts";
 import {getColor} from "../util/getColor.ts";
-import {Box, Paper} from "@mui/material";
-import {plugin} from "typescript-eslint";
+import {Box} from "@mui/material";
 
 type DataSet = {
     label: string
@@ -99,7 +98,7 @@ export default function BigChart() {
                     return groupData ? groupData.totalAmount : 0;
                 }
             });
-            chartDataSets.push(createDataSetForGroup("$", expensesData, getColor(0)))
+            chartDataSets.push(createDataSetForGroup("€", expensesData, getColor(0)))
         }
     }
 
