@@ -32,6 +32,7 @@ export default function FormInputs({ expense }: FormInputsProps) {
     return (
         <Box>
             <TextField
+                sx={{m: "1%"}}
                 autoFocus
                 required
                 margin="dense"
@@ -44,6 +45,7 @@ export default function FormInputs({ expense }: FormInputsProps) {
                 defaultValue={expense?.category || ''}
             />
             <TextField
+                sx={{m: "1%"}}
                 required
                 margin="dense"
                 id="vendor"
@@ -55,6 +57,7 @@ export default function FormInputs({ expense }: FormInputsProps) {
                 defaultValue={expense?.vendor || ''}
             />
             <TextField
+                sx={{m: "1%"}}
                 required
                 margin="dense"
                 id="amount"
@@ -71,11 +74,13 @@ export default function FormInputs({ expense }: FormInputsProps) {
                 }}
             />
             <FormControlLabel
+                sx={{m: "2% 1%"}}
                 control={<Switch defaultChecked={expense?.isCashPayment || false} />}
                 label="Cash Payment"
                 name="isCashPayment"
             />
             <TextField
+                sx={{m: "1%"}}
                 id="description"
                 label="Description"
                 name="description"
@@ -85,6 +90,7 @@ export default function FormInputs({ expense }: FormInputsProps) {
                 defaultValue={expense?.description || ''}
             />
             <TextField
+                sx={{m: "2% 1%"}}
                 label="Date"
                 type="date"
                 variant="standard"
@@ -98,7 +104,7 @@ export default function FormInputs({ expense }: FormInputsProps) {
                     },
                 }}
             />
-            <FormControl fullWidth>
+            <FormControl fullWidth sx={{m: "1%"}}>
                 <InputLabel id="paymentFrequency">Payment frequency</InputLabel>
                 <Select
                     labelId="paymentFrequency"

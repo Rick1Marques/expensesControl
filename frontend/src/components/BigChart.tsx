@@ -14,7 +14,8 @@ import {ExpensesContext} from "../store/expenses-context.tsx";
 import {groupExpenses} from "../util/groupExpenses.ts";
 import {getFirstAndLastYear} from "../util/getFirstAndLastYear.ts";
 import {getColor} from "../util/getColor.ts";
-import {Box} from "@mui/material";
+import {Box, Paper} from "@mui/material";
+import {plugin} from "typescript-eslint";
 
 type DataSet = {
     label: string
@@ -144,12 +145,14 @@ export default function BigChart() {
         datasets: chartDataSets
     }
 
+
     return (
-        <Box sx={{
-            width: "60%",
-            minWidth: "600px",
-        }}>
-            <Bar data={data}/>
+        <Box
+               sx={{
+                   width: "60%",
+                   minWidth: "600px",
+               }}>
+            <Bar data={data}  />
         </Box>
     )
 }

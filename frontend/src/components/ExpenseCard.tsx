@@ -2,7 +2,7 @@ import {useContext} from "react";
 import {ExpensesContext} from "../store/expenses-context.tsx";
 import FormDialog from "./FormDialog.tsx";
 import {Expense} from "../model/Expense.ts";
-import {IconButton, ListItem} from "@mui/material";
+import {Box, Card, CardActions, CardContent, IconButton, ListItem, Typography} from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import InfoIcon from '@mui/icons-material/Info';
 import axios from "axios";
@@ -13,7 +13,7 @@ type ExpenseCardProps = {
 
 
 export default function ExpenseCard({expense}: ExpenseCardProps) {
-    const {id, vendor, amount, category, date, isCashPayment, paymentFrequency} = expense;
+    const {id, vendor, amount, date, isCashPayment} = expense;
     const {handleChangeSelectedGroupsFilter} = useContext(ExpensesContext)
 
 
@@ -28,21 +28,56 @@ export default function ExpenseCard({expense}: ExpenseCardProps) {
 
     return (
         <ListItem>
-            <article>
-                <p>{vendor}</p>
-                <p>{amount}</p>
-                <p>{category}</p>
-                {isCashPayment && <p>cash</p>}
-                <p>{date}</p>
-                <p>{paymentFrequency}</p>
-                <FormDialog type="edit" expense={expense}/>
-                <IconButton onClick={handleDelete}>
-                    <DeleteIcon/>
-                </IconButton>
-                <IconButton onClick={() => handleChangeSelectedGroupsFilter(id, "expenses")}>
-                    <InfoIcon/>
-                </IconButton>
-            </article>
+            <Card sx={{width: "100%"}}>
+                <CardContent
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                    }}>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center"
+                        }}>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                m: "2% 8%"
+                            }}>
+                        <Typography variant="h5">{vendor}</Typography>
+                        <Typography variant="subtitle1">{date}</Typography>
+                        </Box>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                m: "2% 8%"
+                            }}>
+                        <Typography variant="h5">{amount}$</Typography>
+                        {isCashPayment && <Typography variant="caption">cash</Typography>}
+                        </Box>
+
+                    </Box>
+                    <CardActions
+                        sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                        }}
+                    >
+                        <FormDialog type="edit" expense={expense}/>
+                        <IconButton color="info" onClick={() => handleChangeSelectedGroupsFilter(id, "expenses")}>
+                            <InfoIcon fontSize="large"/>
+                        </IconButton>
+                        <IconButton color="warning" onClick={handleDelete}>
+                            <DeleteIcon/>
+                        </IconButton>
+                    </CardActions>
+                </CardContent>
+            </Card>
         </ListItem>
     )
 

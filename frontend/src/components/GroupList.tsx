@@ -1,7 +1,7 @@
 import {ChangeEvent, useContext, useEffect, useState} from "react";
 import {ExpensesContext} from "../store/expenses-context.tsx";
 import GroupCard from "./GroupCard.tsx";
-import {Box, ButtonGroup, FormControl,  List, MenuItem, Select} from "@mui/material";
+import {Box, ButtonGroup, FormControl, List, MenuItem, Paper, Select} from "@mui/material";
 import Button from "@mui/material/Button";
 
 type Order = "asc" | "desc"
@@ -58,18 +58,19 @@ export default function GroupList({title}: ListProps) {
         setSortOrder(event.target.value as Order)
     }
 
-
     return (
-        <Box
+        <Paper elevation={3}
             sx={{
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 height: "700px",
                 gap: "10px",
-                minWidth: "30%"
+                width: "30%",
+                minWidth: "300px",
+                p: "10px"
             }}>
-            <h2>{title}</h2>
+            <h2>{title[0].toUpperCase() + title.slice(1)}</h2>
             <Box
                 sx={{
                     display: "flex",
@@ -82,7 +83,7 @@ export default function GroupList({title}: ListProps) {
                 <Box>
                     <ButtonGroup variant="text" aria-label="Basic button group">
                     <Button size="small" onClick={() => handleFieldChange("alpha")}>Alpha</Button>
-                    <Button size="small"onClick={() => handleFieldChange("amount")}>Amount</Button>
+                    <Button size="small" onClick={() => handleFieldChange("amount")}>Amount</Button>
                     </ButtonGroup>
                 </Box>
                     <FormControl variant="standard" sx={{ minWidth: 80}}>
@@ -110,5 +111,5 @@ export default function GroupList({title}: ListProps) {
                 )}
             </List>
 
-        </Box>)
+        </Paper>)
 }

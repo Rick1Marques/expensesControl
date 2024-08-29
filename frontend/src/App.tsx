@@ -13,7 +13,7 @@ export default function App() {
             <Box sx={{
                 display: "flex",
                 flexDirection: "column",
-                gap: "15px",
+                gap: "20px",
             }}>
                 <SelectionCockpit/>
 

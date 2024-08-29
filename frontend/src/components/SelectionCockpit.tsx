@@ -12,10 +12,11 @@ export default function SelectionCockpit(){
             sx={{
                 display: "flex",
                 justifyContent: "space-between",
-                alignItems: "center"
+                alignItems: "center",
+                m: "1%"
             }}>
-            <TimeRangeFilter/>
 
+            <TimeRangeFilter/>
             <TextField label="Ref Date" variant="outlined" color="primary" type="date" id="refDate" value={refDate}
                        onChange={(event) => handleChangeRefDate(event.target.value)}/>
 

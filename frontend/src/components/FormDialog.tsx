@@ -8,9 +8,10 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import {ExpenseDto} from "../model/ExpenseDto.ts";
 import {Expense} from "../model/Expense.ts";
-import {Box, Fab} from "@mui/material";
+import {Box, Fab, IconButton} from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import EditRoundedIcon from '@mui/icons-material/EditRounded';
 
 type FormDialogProps = {
     type: "add" | "edit",
@@ -58,9 +59,15 @@ export default function FormDialog({type, expense}: FormDialogProps) {
 
     return (
         <Box>
-            <Fab color="primary" onClick={handleClickOpen}>
-                {type === "add" ? <AddIcon />: <EditOutlinedIcon/>}
-            </Fab>
+            {type === "add"
+                ?
+                <Fab color="primary" onClick={handleClickOpen}>
+                    <AddIcon/>
+                </Fab>
+                :
+                <IconButton color="primary">
+                    <EditOutlinedIcon/>
+                </IconButton>}
             <Dialog
                 open={open}
                 onClose={handleClose}
@@ -88,7 +95,7 @@ export default function FormDialog({type, expense}: FormDialogProps) {
 
                 <DialogTitle>{type === "add" ? "Add New Expense" : "Edit Expense"}</DialogTitle>
                 <DialogContent>
-                    <FormInputs expense={expense} />
+                    <FormInputs expense={expense}/>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
