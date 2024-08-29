@@ -1,6 +1,8 @@
 import {ChangeEvent, useContext, useEffect, useState} from "react";
 import {ExpensesContext} from "../store/expenses-context.tsx";
 import GroupCard from "./GroupCard.tsx";
+import {Box, ButtonGroup, FormControl, List, MenuItem, Paper, Select, Typography} from "@mui/material";
+import Button from "@mui/material/Button";
 
 type Order = "asc" | "desc"
 type Field = "amount" | "alpha"
@@ -21,32 +23,31 @@ export default function GroupList({title}: ListProps) {
 
     useEffect(() => {
 
-    function sortExpenses(field: Field, order: Order) {
+        function sortExpenses(field: Field, order: Order) {
 
-       let groupedExpenses: Group[]
-        if( title === "vendor"){
-            groupedExpenses = [...expensesVendor];
-        } else {
-            groupedExpenses = [...expensesCategory]
+            let groupedExpenses: Group[]
+            if (title === "vendor") {
+                groupedExpenses = [...expensesVendor];
+            } else {
+                groupedExpenses = [...expensesCategory]
+            }
+
+
+            const sortedExpensesGroup = [...groupedExpenses].sort((a, b) => {
+                let comparison = 0;
+                if (field === "amount") {
+                    comparison = a.totalAmount - b.totalAmount
+                } else if (field === "alpha") {
+                    comparison = a.name.localeCompare(b.name)
+                }
+                return order === "asc" ? comparison : -comparison
+            })
+
+            setExpensesGroup(sortedExpensesGroup)
         }
 
-
-        const sortedExpensesGroup = [...groupedExpenses].sort((a, b) => {
-            let comparison = 0;
-            if (field === "amount") {
-                comparison = a.totalAmount - b.totalAmount
-            } else if (field === "alpha") {
-                comparison = a.name.localeCompare(b.name)
-            }
-            return order === "asc" ? comparison : -comparison
-        })
-
-        setExpensesGroup(sortedExpensesGroup)
-    }
         sortExpenses(sortField, sortOrder);
     }, [expensesGlobal, sortOrder, sortField, title, expensesCategory, expensesVendor])
-
-
 
 
     function handleFieldChange(field: Field) {
@@ -57,21 +58,61 @@ export default function GroupList({title}: ListProps) {
         setSortOrder(event.target.value as Order)
     }
 
+    return (
+        <Paper elevation={3}
+            sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                height: "700px",
+                gap: "10px",
+                width: "30%",
+                minWidth: "300px",
+                p: "2% 1%",
+            }}>
+            <Typography variant="h4">{title[0].toUpperCase() + title.slice(1)}</Typography>
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    width: "100%",
+                    borderBottom: "1px solid black",
+                    pb: "10px",
+                }}
+            >
+                <Box>
+                    <ButtonGroup variant="text" aria-label="Basic button group">
+                    <Button size="small" onClick={() => handleFieldChange("alpha")}>Alpha</Button>
+                    <Button size="small" onClick={() => handleFieldChange("amount")}>Amount</Button>
+                    </ButtonGroup>
+                </Box>
+                    <FormControl variant="standard" sx={{ minWidth: 80}}>
+                        <Select
+                            labelId="sortOrder"
+                            id="sortOrder"
+                            value={sortOrder}
+                            onChange={handleOrderChange}
+                            label="sortOrder"
+                        >
+                            <MenuItem value="asc">Asc</MenuItem>
+                            <MenuItem value="desc">Desc</MenuItem>
+                        </Select>
+                    </FormControl>
+            </Box>
+            <List
+                sx={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(2, 1fr)",
+                    gap: "5%",
+                    width: "100%",
+                    overflowY: "auto",
+                }}
+            >
+                {expensesGroup.map(group =>
+                    (<GroupCard key={group.name} name={group.name} totalAmount={group.totalAmount}
+                                totalEntries={group.totalEntries} groupType={title}/>)
+                )}
+            </List>
 
-    return (<section>
-        <h2>{title}</h2>
-        <button onClick={() => handleFieldChange("alpha")}>Alpha</button>
-        <button onClick={() => handleFieldChange("amount")}>Amount</button>
-        <label htmlFor="sortOrder"/>
-        <select id="sortOrder" value={sortOrder} onChange={handleOrderChange}>
-            <option value="asc">Ascending</option>
-            <option value="desc">Descending</option>
-        </select>
-
-        <ul>
-            {expensesGroup.map(group => {
-                return (<GroupCard key={group.name} name={group.name} totalAmount={group.totalAmount} totalEntries={group.totalEntries} groupType={title}/>)
-            })}
-        </ul>
-    </section>)
+        </Paper>)
 }

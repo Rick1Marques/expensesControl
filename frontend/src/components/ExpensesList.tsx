@@ -2,6 +2,8 @@ import {ChangeEvent, useContext, useEffect, useState} from "react";
 import {Expense} from "../model/Expense.ts";
 import ExpenseCard from "./ExpenseCard.tsx";
 import {ExpensesContext} from "../store/expenses-context.tsx";
+import {Box, ButtonGroup, FormControl, List, MenuItem, Paper, Select, Typography} from "@mui/material";
+import Button from "@mui/material/Button";
 
 
 type Order = "asc" | "desc"
@@ -45,22 +47,63 @@ export default function ExpensesList() {
 
 
     return (
-        <section>
-            <h2>Expenses List</h2>
-            <button onClick={() => handleFieldChange("date")}>Date</button>
-            <button onClick={() => handleFieldChange("amount")}>Amount</button>
-            <label htmlFor="sortOrder"/>
-            <select id="sortOrder" value={sortOrder} onChange={handleOrderChange}>
-                <option value="asc">Ascending</option>
-                <option value="desc">Descending</option>
-            </select>
-            <ul>
+        <Paper elevation={3}
+            sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                height: "700px",
+                gap: "10px",
+                width: "30%",
+                minWidth: "300px",
+                p: "2% 1%",
+            }}>
+            <Typography variant="h4">Expenses List</Typography>
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    borderBottom: "1px solid black",
+                    pb: "10px",
+                    width: "100%",
+                }}
+            >
+                <Box>
+                    <ButtonGroup variant="text" aria-label="Basic button group">
+                    <Button size="small" onClick={() => handleFieldChange("date")}>Date</Button>
+                    <Button size="small" onClick={() => handleFieldChange("amount")}>Amount</Button>
+                    </ButtonGroup>
+
+                </Box>
+                <FormControl variant="standard" sx={{minWidth: 80}}>
+                    <Select
+                        labelId="sortOrder"
+                        id="sortOrder"
+                        value={sortOrder}
+                        onChange={handleOrderChange}
+                        label="sortOrder"
+                    >
+                        <MenuItem value="asc">Asc</MenuItem>
+                        <MenuItem value="desc">Desc</MenuItem>
+                    </Select>
+                </FormControl>
+            </Box>
+
+            <List
+                sx={{
+                    width: "100%",
+                    overflowY: "auto",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "5%"
+
+                }}>
                 {expenses.map(expense =>
                     <ExpenseCard
                         key={expense.id}
                         expense={expense}
                     />)}
-            </ul>
-        </section>
+            </List>
+        </Paper>
     )
 }

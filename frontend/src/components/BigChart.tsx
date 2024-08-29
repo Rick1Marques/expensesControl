@@ -14,6 +14,7 @@ import {ExpensesContext} from "../store/expenses-context.tsx";
 import {groupExpenses} from "../util/groupExpenses.ts";
 import {getFirstAndLastYear} from "../util/getFirstAndLastYear.ts";
 import {getColor} from "../util/getColor.ts";
+import {Box} from "@mui/material";
 
 type DataSet = {
     label: string
@@ -97,7 +98,7 @@ export default function BigChart() {
                     return groupData ? groupData.totalAmount : 0;
                 }
             });
-            chartDataSets.push(createDataSetForGroup("$", expensesData, getColor(0)))
+            chartDataSets.push(createDataSetForGroup("€", expensesData, getColor(0)))
         }
     }
 
@@ -133,7 +134,6 @@ export default function BigChart() {
             for (let i = firstYear; i <= lastYear; i++) {
                 labels.push(i.toString())
             }
-
             generateExpensesData(labels, selectedGroupsFilter)
             break;
         }
@@ -144,9 +144,14 @@ export default function BigChart() {
         datasets: chartDataSets
     }
 
+
     return (
-        <>
-            <Bar data={data}/>
-        </>
+        <Box
+               sx={{
+                   width: "60%",
+                   minWidth: "600px",
+               }}>
+            <Bar data={data}  />
+        </Box>
     )
 }
