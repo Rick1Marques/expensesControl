@@ -20,7 +20,7 @@ export default function App() {
                 <Box
                     sx={{
                         display: "flex",
-                        justifyContent: "space-between"
+                        justifyContent: "space-around"
                     }}>
                     <DetailsScreen/>
                     <BigChart/>
@@ -29,7 +29,7 @@ export default function App() {
                 <Box
                     sx={{
                         display: "flex",
-                        justifyContent: "space-between"
+                        justifyContent: "space-around"
                     }}>
                     <GroupList title={"vendor"}/>
                     <GroupList title={"category"}/>

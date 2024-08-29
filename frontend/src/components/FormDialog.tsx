@@ -11,7 +11,6 @@ import {Expense} from "../model/Expense.ts";
 import {Box, Fab, IconButton} from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import EditRoundedIcon from '@mui/icons-material/EditRounded';
 
 type FormDialogProps = {
     type: "add" | "edit",
@@ -66,7 +65,7 @@ export default function FormDialog({type, expense}: FormDialogProps) {
                 </Fab>
                 :
                 <IconButton color="primary">
-                    <EditOutlinedIcon/>
+                    <EditOutlinedIcon onClick={handleClickOpen}/>
                 </IconButton>}
             <Dialog
                 open={open}

@@ -2,7 +2,7 @@ import {ChangeEvent, useContext, useEffect, useState} from "react";
 import {Expense} from "../model/Expense.ts";
 import ExpenseCard from "./ExpenseCard.tsx";
 import {ExpensesContext} from "../store/expenses-context.tsx";
-import {Box, ButtonGroup, FormControl, List, MenuItem, Paper, Select} from "@mui/material";
+import {Box, ButtonGroup, FormControl, List, MenuItem, Paper, Select, Typography} from "@mui/material";
 import Button from "@mui/material/Button";
 
 
@@ -56,9 +56,9 @@ export default function ExpensesList() {
                 gap: "10px",
                 width: "30%",
                 minWidth: "300px",
-                p: "10px"
+                p: "2% 1%",
             }}>
-            <h2>Expenses List</h2>
+            <Typography variant="h4">Expenses List</Typography>
             <Box
                 sx={{
                     display: "flex",
@@ -92,7 +92,11 @@ export default function ExpensesList() {
             <List
                 sx={{
                     width: "100%",
-                    overflowY: "auto"
+                    overflowY: "auto",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "5%"
+
                 }}>
                 {expenses.map(expense =>
                     <ExpenseCard

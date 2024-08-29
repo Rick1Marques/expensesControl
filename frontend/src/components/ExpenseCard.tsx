@@ -27,13 +27,14 @@ export default function ExpenseCard({expense}: ExpenseCardProps) {
     }
 
     return (
-        <ListItem>
+        <ListItem sx={{p: "1px"}}>
             <Card sx={{width: "100%"}}>
                 <CardContent
-                    sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                    }}>
+                sx={{pb: "0px",
+                        "&:last-child": {
+                            pb: 0
+                        }}}
+                >
                     <Box
                         sx={{
                             display: "flex",

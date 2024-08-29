@@ -1,7 +1,7 @@
 import {ChangeEvent, useContext, useEffect, useState} from "react";
 import {ExpensesContext} from "../store/expenses-context.tsx";
 import GroupCard from "./GroupCard.tsx";
-import {Box, ButtonGroup, FormControl, List, MenuItem, Paper, Select} from "@mui/material";
+import {Box, ButtonGroup, FormControl, List, MenuItem, Paper, Select, Typography} from "@mui/material";
 import Button from "@mui/material/Button";
 
 type Order = "asc" | "desc"
@@ -68,9 +68,9 @@ export default function GroupList({title}: ListProps) {
                 gap: "10px",
                 width: "30%",
                 minWidth: "300px",
-                p: "10px"
+                p: "2% 1%",
             }}>
-            <h2>{title[0].toUpperCase() + title.slice(1)}</h2>
+            <Typography variant="h4">{title[0].toUpperCase() + title.slice(1)}</Typography>
             <Box
                 sx={{
                     display: "flex",
@@ -101,8 +101,11 @@ export default function GroupList({title}: ListProps) {
             </Box>
             <List
                 sx={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(2, 1fr)",
+                    gap: "5%",
                     width: "100%",
-                    overflowY: "auto"
+                    overflowY: "auto",
                 }}
             >
                 {expensesGroup.map(group =>
